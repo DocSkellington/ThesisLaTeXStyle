@@ -300,5 +300,14 @@ TSWLatexianTemp*
 # Uncomment the next line to have this generated file ignored.
 #*Notes.bib
 
-thesis/*.sty
-thesis/*.cls
+*.hd
+
+thesis/thesis.cls
+thesis/thsbiblio.sty
+thesis/thstheorem.sty
+thesis/thesis.pdf
+
+example/thesis.cls
+example/thsbiblio.sty
+example/thstheorem.sty
+example/example.pdf
