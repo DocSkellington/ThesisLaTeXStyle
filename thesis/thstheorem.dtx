@@ -21,9 +21,263 @@
 %</driver>
 %<package>\NeedsTeXFormat{LaTeX2e}
 %<package>\ProvidesExplPackage{thstheorem}{2024/07/15}{v1.0}{PhD thesis: theorem boxes}
+%
+%<package>\RequirePackage{tikz}
+%<package>\RequirePackage[skins, breakable, theorems, magazine]{tcolorbox}
 
 \ExplSyntaxOn
 
+\DeclareKeys[thstheorem]{
+  roman~equations.if = @thstheorem@roman,
+  roman~equations.usage = preamble
+}
+\ProcessKeyOptions
+
+\colorlet{theoremBackground}{DarkGray!40!white}
+\colorlet{theoremFrame}{black}
+
+\colorlet{definitionBackground}{DarkGray!20!white}
+\colorlet{definitionFrame}{DarkGray}
+
+\colorlet{exampleBackground}{DarkGray!10!white}
+\colorlet{exampleFrame}{LightGray}
+
+\tcbset{
+  boxS/.style = {
+    enhanced,
+    breakable = true,
+    % Padding
+    left = 2pt,
+    right = 2pt,
+    top = 3pt,
+    bottom = 3pt,
+    % Space before and after
+    before~skip~balanced = 0.5\baselineskip~plus~5pt,
+    after~skip~balanced = 0.5\baselineskip~plus~5pt,
+  },
+  % For main body
+  theoremS/.style = {
+    boxS,
+    theorem~style = plain, % No break after theorem title
+    % Border
+    arc = 0pt,
+    boxrule = 0pt,
+    leftrule = 1pt,
+    colframe = theoremFrame,
+    % Title
+    fonttitle = \normalfont\bfseries,
+    description~font = \normalfont,
+    coltitle = black,
+    % Main text
+    fontupper = \itshape,
+    colback = theoremBackground,
+  },
+  lemmaS/.style = {
+    theoremS,
+  },
+  propositionS/.style = {
+    theoremS,
+  },
+  corollaryS/.style = {
+    theoremS,
+  },
+  definitionS/.style = {
+    theoremS,
+    colframe = definitionFrame,
+    colback = definitionBackground,
+    fontupper = \normalfont,
+  },
+  assumptionS/.style = {
+    definitionS,
+  },
+  exampleS/.style = {
+    theoremS,
+    fonttitle = \normalfont\itshape,
+    fontupper = \normalfont,
+    colframe = exampleFrame,
+    colback = exampleBackground,
+  },
+  remarkS/.style = {
+    exampleS
+  },
+  proofS/.style = {
+    boxS,
+    colback=white,
+    % Border
+    arc=0pt,
+    boxrule=0pt,
+    borderline={0.3pt}{-0.25pt}{dotted},
+  },
+  % For margin
+  theoremMarginS/.style = {
+    theoremS,
+    fonttitle = \normalfont\small\bfseries,
+    fontupper = {\small},
+  },
+  lemmaMarginS/.style = {
+    theoremMarginS,
+  },
+  propositionMarginS/.style = {
+    theoremMarginS,
+  },
+  corollaryMarginS/.style = {
+    theoremMarginS,
+  },
+  definitionMarginS/.style = {
+    theoremMarginS,
+    colframe = definitionFrame,
+    colback = definitionBackground,
+  },
+  assumptionMarginS/.style = {
+    definitionMarginS,
+  },
+  exampleMarginS/.style = {
+    theoremMarginS,
+    fonttitle = \normalfont\small\itshape,
+    colframe = exampleFrame,
+    colback = exampleBackground,
+  },
+  remarkMarginS/.style = {
+    exampleMarginS
+  },
+}
+
+\theoremstyle{plain}
+\newtheorem{theoremInner}{Theorem}[section]
+\newtheorem{lemmaInner}[theoremInner]{Lemma}
+\newtheorem{propositionInner}[theoremInner]{Proposition}
+\newtheorem{corollaryInner}[theoremInner]{Corollary}
+
+\theoremstyle{definition}
+\newtheorem{definitionInner}[theoremInner]{Definition}
+\newtheorem{assumptionInner}[theoremInner]{Assumption}
+
+\theoremstyle{remark}
+\newtheorem{exampleInner}[theoremInner]{Example}
+\newtheorem{remarkInner}[theoremInner]{Remark}
+
+\crefname{theoremInner}{theorem}{theorems}
+\crefname{lemmaInner}{lemma}{lemmas}
+\crefname{propositionInner}{proposition}{propositions}
+\crefname{corollaryInner}{corollary}{corollaries}
+\crefname{definitionInner}{definition}{definitions}
+\crefname{assumption}{assumption}{assumptions}
+\crefname{assumptionInner}{assumption}{assumptions}
+\crefname{exampleInner}{example}{examples}
+\crefname{remarkInner}{remark}{remarks}
+
+\tcolorboxenvironment{theoremInner}{theoremS}
+\tcolorboxenvironment{lemmaInner}{lemmaS}
+\tcolorboxenvironment{propositionInner}{propositionS}
+\tcolorboxenvironment{corollaryInner}{corollaryS}
+\tcolorboxenvironment{definitionInner}{definitionS}
+\tcolorboxenvironment{assumptionInner}{assumptionS}
+\tcolorboxenvironment{exampleInner}{exampleS}
+\tcolorboxenvironment{remarkInner}{remarkS}
+\tcolorboxenvironment{proof}{proofS}
+
+% {type} {label of original}
+% Description of the environment is not retrieved (e.g., Definition 3.2.1 [Description of the definition])
+\NewDocumentEnvironment{ths@restatable}{ m m }{
+  \newboxarray{#2}
+  \begin{tcolorbox}[
+    reset~and~store~to~box~array = {#2},
+    #1S,
+    title = {\Cref*{#2}.},
+  ]
+}{
+  \end{tcolorbox}
+}
+\NewDocumentEnvironment{ths@restatable*}{ m m }{
+  \setlength{\linewidth}{\marginparwidth}
+  \newboxarray{#2:margin}
+  \begin{tcolorbox}[
+    reset~and~store~to~box~array = {#2:margin},
+    #1MarginS,
+    title = {\Cref*{#2}.},
+  ]
+}{
+  \end{tcolorbox}
+}
+
+% {type} {label} {description} {margin?} {body}
+\NewDocumentCommand{\ths@thm}{ m m m m +m }{
+  \IfValueTF{#3}{
+    \begin{#1Inner}[#3]\label{#2}
+      #5
+    \end{#1Inner}
+  }{
+    \begin{#1Inner}\label{#2}
+      #5
+    \end{#1Inner}
+  }
+  \begin{ths@restatable}{#1}{#2}
+    #5
+  \end{ths@restatable}
+  \IfBooleanT{#4}{
+    \setlist[1]{leftmargin=*}
+    \begin{ths@restatable*}{#1}{#2}
+      #5
+    \end{ths@restatable*}
+  }
+}
+
+% All environments require the label!
+\NewDocumentEnvironment{theorem}{ o m +b }{\ths@thm{theorem}{#2}{#1}{\BooleanFalse}{#3}}{}
+\NewDocumentEnvironment{theorem*}{ o m +b }{\ths@thm{theorem}{#2}{#1}{\BooleanTrue}{#3}}{}
+\NewDocumentEnvironment{lemma}{ o m +b }{\ths@thm{lemma}{#2}{#1}{\BooleanFalse}{#3}}{}
+\NewDocumentEnvironment{lemma*}{ o m +b }{\ths@thm{lemma}{#2}{#1}{\BooleanTrue}{#3}}{}
+\NewDocumentEnvironment{proposition}{ o m +b }{\ths@thm{proposition}{#2}{#1}{\BooleanFalse}{#3}}{}
+\NewDocumentEnvironment{proposition*}{ o m +b }{\ths@thm{proposition}{#2}{#1}{\BooleanTrue}{#3}}{}
+\NewDocumentEnvironment{corollary}{ o m +b }{\ths@thm{corollary}{#2}{#1}{\BooleanFalse}{#3}}{}
+\NewDocumentEnvironment{corollary*}{ o m +b }{\ths@thm{corollary}{#2}{#1}{\BooleanTrue}{#3}}{}
+\NewDocumentEnvironment{definition}{ o m +b }{\ths@thm{definition}{#2}{#1}{\BooleanFalse}{#3}}{}
+\NewDocumentEnvironment{definition*}{ o m +b }{\ths@thm{definition}{#2}{#1}{\BooleanTrue}{#3}}{}
+\NewDocumentEnvironment{assumption}{ o m +b }{\ths@thm{assumption}{#2}{#1}{\BooleanFalse}{#3}}{}
+\NewDocumentEnvironment{assumption*}{ o m +b }{\ths@thm{assumption}{#2}{#1}{\BooleanTrue}{#3}}{}
+\NewDocumentEnvironment{remark}{ o m +b }{\ths@thm{remark}{#2}{#1}{\BooleanFalse}{#3}}{}
+\NewDocumentEnvironment{remark*}{ o m +b }{\ths@thm{remark}{#2}{#1}{\BooleanTrue}{#3}}{}
+\NewDocumentEnvironment{example}{ o m +b }{\ths@thm{example}{#2}{#1}{\BooleanFalse}{#3}}{}
+\NewDocumentEnvironment{example*}{ o m +b }{\ths@thm{example}{#2}{#1}{\BooleanTrue}{#3}}{}
+
+\renewcommand{\qedsymbol}{$\square$} % I don't know why but the square is removed by something
+
+% {type} {label of original}
+\NewDocumentEnvironment{restatableMargin}{ m m }{
+  % \setlength{\labelindent}{0em}
+  \setlist[1]{leftmargin=*}
+  \begin{ths@restatable*}{#1}{#2}
+}{
+  \end{ths@restatable*}
+}
+
+\NewDocumentCommand{\restate}{m}{
+  \useboxarray[#1]{1}
+}
+
+% Changing the way equations are labeled to use roman numbers
+\if@thstheorem@roman
+  \renewcommand{\theequation}{\thesection.\roman{equation}}
+  \@addtoreset{equation}{section}
+\else
+  \counterwithin{equation}{section}
+\fi
+
+
+% Restatable equations.
+% It creates a macro (that does not take any arguments) that outputs the same equation with the same numbering
+\NewDocumentCommand{\restatableMarginEquation}{ m m m }{
+  \cs_gset:Npn #1 {
+    \footnotesize
+    \@fleqntrue
+    \begin{equation*}
+      \begin{split}
+        #2
+      \end{split}
+      \tag{\ref{#3}}
+    \end{equation*}
+  }
+}
 \ExplSyntaxOff
 
 \endinput
