@@ -5,7 +5,11 @@ doc: build
 	$(MAKE) -C thesis doc
 
 example: build
-	cp thesis/thesis.cls thesis/thsbiblio.sty thesis/thstheorem.sty example/
+	cp thesis/thesis.cls \
+		thesis/thsbiblio.sty \
+		thesis/thstheorem.sty \
+		thesis/thslayout.sty \
+		example/
 	$(MAKE) -C example
 
 clean:

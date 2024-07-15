@@ -1,6 +1,9 @@
 build:
-	latexmk -pdf example.tex
+	latexmk -pdflua example.tex
 
 clean:
-	-rm thesis.cls thsbiblio.sty thstheorem.sty
+	-rm thesis.cls \
+		thsbiblio.sty \
+		thstheorem.sty \
+		thslayout.sty
 	latexmk -C example.tex

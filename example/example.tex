@@ -1,13 +1,50 @@
-\documentclass{thesis}
+\documentclass[
+  a4paper,
+  fontsize = 11pt,
+  english,
+  openany,
+  twoside=false,
+  roman equations,
+]{thesis}
+
+\usepackage{blindtext}
 
 \title{Example for the thesis class}
 \author{Gaëtan Staquet}
 
 \begin{document}
+  \frontmatter
   \maketitle
 
-  \chapter{Commands}
+  \mainmatter
 
-  \chapter{Layout configuration}
+  \chapter{Mathematical tools}
+
+  \section{Theorems}
+
+  \begin{definition*}{def:box}
+    This is a definition.
+  \end{definition*}
+
+  This is some text with a marginnote next to it.\marginnote{Test of a margin note.}
+
+  Likewise with a sidenote.\sidenote{Test of a side note.}
+
+  \begin{equation}
+    a = b
+  \end{equation}
+
+  \subsection{Restate boxes}
+
+  \restate{def:box}
+  \marginnote{\restate{def:box:margin}}
+
+  \part{Blind text}
+
+  \Blinddocument
+
+  \backmatter
+
+  \Blinddocument
 
 \end{document}

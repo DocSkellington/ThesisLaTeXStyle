@@ -303,11 +303,13 @@ TSWLatexianTemp*
 *.hd
 
 thesis/thesis.cls
+thesis/thslayout.sty
 thesis/thsbiblio.sty
 thesis/thstheorem.sty
 thesis/thesis.pdf
 
 example/thesis.cls
+example/thslayout.sty
 example/thsbiblio.sty
 example/thstheorem.sty
 example/example.pdf

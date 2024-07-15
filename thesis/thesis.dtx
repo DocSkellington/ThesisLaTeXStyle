@@ -19,18 +19,38 @@
 %<*driver>
 \ProvidesFile{\jobname.dtx}
 %</driver>
-%<class>\NeedsTeXFormat{LaTeX2e}
+%<class>\NeedsTeXFormat{LaTeX2e}[2022-06-01]
 %<class>\ProvidesExplClass{thesis}{2024/07/15}{v1.0}{PhD thesis document class}
 %
-%<class>\LoadClass{scrbook}
+%<class>\RequirePackage{iftex}
+%<class>\RequireLuaTeX
 %
+%<class>\LoadClassWithOptions{scrbook}
+%
+%<class>\RequirePackage{hyperref}
+%
+%<class>\RequirePackage[dvipsnames,svgnames,table]{xcolor}
+%
+%<class>\RequirePackage{amssymb}
+%<class>\RequirePackage{amsmath}
+%<class>\RequirePackage{amsthm}
+%<class>\RequirePackage{thmtools}
+%<class>\RequirePackage{mathtools}
+%<class>\RequirePackage[warnings-off={mathtools-colon,mathtools-overbracket}, math-style=TeX]{unicode-math}
+%
+%<class>\RequirePackage[nameinlink]{cleveref}
+%
+%<class>\RequirePackage{thslayout}
 %<class>\RequirePackage{thsbiblio}
 %<class>\RequirePackage{thstheorem}
+%
+%<class>\RequirePackage{xparse}
 %
 %<*driver>
 \documentclass[a4paper]{l3doc}
 \usepackage{xparse}
 \usepackage{expl3}
+\usepackage{etoolbox}
 \usepackage{hyperref}
 \usepackage[nameinlink]{cleveref}
 \begin{document}
@@ -61,6 +81,27 @@
 % \begin{implementation}
 
 \ExplSyntaxOn
+
+\DeclareKeys{
+}
+\ProcessKeyOptions
+
+% Print latin words in italics (The xspace package is required but we already loaded it in the class)
+
+% \begin{macro}{hairsp, etal, denovo, adhoc, etcetera, etc, ie, eg, vs, cf}
+%    \begin{macrocode}
+\NewDocumentCommand{\hairsp}{}{\hspace{1pt}}
+\NewDocumentCommand{\etal}{}{\textit{et al.}\xspace}
+\NewDocumentCommand{\denovo}{}{\textit{de novo}\xspace}
+\NewDocumentCommand{\adhoc}{}{\textit{ad hoc}\xspace}
+\NewDocumentCommand{\etcetera}{}{\textit{et cetera}\xspace}
+\NewDocumentCommand{\etc}{}{\textit{etc.}\xspace}
+\NewDocumentCommand{\ie}{}{\textit{i.\nobreak\hairsp{}e.}\xspace}
+\NewDocumentCommand{\eg}{}{\textit{e.\nobreak\hairsp{}g.}\xspace}
+\NewDocumentCommand{\vs}{}{\textit{vs}\xspace}
+\NewDocumentCommand{\cf}{}{\textit{cf.}\xspace}
+%    \end{macrocode}
+% \end{macro}
 
 \ExplSyntaxOff
 

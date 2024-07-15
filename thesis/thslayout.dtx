@@ -1,0 +1,406 @@
+% \iffalse meta-comment
+%
+% Copyright (C) 2024 by Gaëtan Staquet
+% -----------------------------------
+%
+% This file may be distributed and/or modified under the
+% conditions of the LaTeX Project Public License, either version 1.3
+% of this license or (at your option) any later version.
+% The latest version of this license is in:
+%
+%    http://www.latex-project.org/lppl.txt
+%
+% and version 1.3 or later is part of all distributions of LaTeX
+% version 2005/12/01 or later.
+%
+% \fi
+%
+% \iffalse
+%<*driver>
+\ProvidesFile{\jobname.dtx}
+%</driver>
+%<package>\NeedsTeXFormat{LaTeX2e}
+%<package>\ProvidesExplPackage{thslayout}{2024/07/15}{v1.0}{PhD thesis: layout setup}
+%
+%<package>\RequirePackage{etoolbox}
+%<package>\RequirePackage{ifthen}
+%<package>\RequirePackage{calc}
+%<package>\RequirePackage{geometry}
+%<package>\RequirePackage{enumitem}
+%
+%<package>\RequirePackage{scrlayer-scrpage}
+
+\ExplSyntaxOn
+
+\apptocmd{\frontmatter}{
+  \bookmarksetup{startatroot}
+  \pagestyle{plain.scrheadings}
+  \pagelayout{wide}
+  \chapterstyle{plain}
+}{}{\msg_warning:nn{thesis}{frontmatter}}
+
+\apptocmd{\mainmatter}{
+  \bookmarksetup{startatroot}
+  \pagestyle{scrheadings}
+  \pagelayout{margin}
+  \chapterstyle{vertical line}
+}{}{\msg_warning:nn{thesis}{mainmatter}}
+
+\apptocmd{\backmatter}{
+  \bookmarksetup{startatroot}
+  \pagestyle{plain.scrheadings}
+  \pagelayout{wide}
+  \chapterstyle{plain}
+}{}{\msg_warning:nn{thesis}{backmatter}}
+
+\AtBeginDocument{
+  \chapterstyle{plain}
+  \pagelayout{wide}
+}
+
+% --------------------
+% Error messages
+% --------------------
+
+\msg_new:nnn{thesis}{pagelayout}{Unknown~page~layout.~Received~#1~but~only~wide~and~margin~are~defined.}
+\msg_new:nnn{thesis}{chapterstyle}{Unknown~chapter~style.~Received~#1~but~only~plain~and~vertical~line~are~defined.}
+\msg_new:nnn{thesis}{frontmatter}{Patching~\frontmatter~failed.}
+\msg_new:nnn{thesis}{mainmatter}{Patching~\mainmatter~failed.}
+\msg_new:nnn{thesis}{backmatter}{Patching~\backmatter~failed.}
+
+% --------------------
+% Lengths of texts
+% --------------------
+
+\newlength{\headtextwidth}
+\newlength{\headmarginparsep}
+\newlength{\headmarginparwidth}
+\newlength{\headtotal}
+\newlength{\totalwidth}
+
+% \begin{macro}{recalchead}
+%    \begin{macrocode}
+\NewDocumentCommand{\recalchead}{}{
+  \setlength{\headtextwidth}{\textwidth}
+  \setlength{\headmarginparsep}{\marginparsep}
+  \setlength{\headmarginparwidth}{\marginparwidth}
+  \setlength{\headtotal}{\headtextwidth+\headmarginparsep+\headmarginparwidth}
+  \setlength{\totalwidth}{\textwidth+\marginparwidth}
+}
+%    \end{macrocode}
+% \end{macro}
+
+\AtBeginDocument{\recalchead}
+
+% --------------------
+% Margin layout
+% --------------------
+
+% \begin{macro}{\marginlayout, \widelayout, \pagelayout}
+%    \begin{macrocode}
+\NewDocumentCommand{\marginlayout}{}{
+  \newgeometry{
+    top=27.4mm,
+    bottom=27.4mm,
+    inner=24.8mm,
+    textwidth=125mm,
+    marginparsep=5.8mm,
+    marginparwidth=46mm,
+  }%
+  \recalchead%
+}
+%    \end{macrocode}
+%    \begin{macrocode}
+\NewDocumentCommand{\widelayout}{}{
+  \newgeometry{
+    top=27.4mm,
+    bottom=27.4mm,
+    inner=24.8mm,
+    outer=24.8mm,
+    marginparsep=0mm,
+    marginparwidth=0mm,
+  }%
+  \recalchead%
+}
+%    \end{macrocode}
+%    \begin{macrocode}
+\DeclareDocumentCommand{\pagelayout}{m}{
+  \ifthenelse{\equal{#1}{margin}}{
+    \marginlayout
+  }{
+    \ifthenelse{\equal{#1}{wide}}{
+      \widelayout
+    }{
+      \msg_error:nnn{thesis}{pagelayout}{#1}
+    }
+  }
+}
+%    \end{macrocode}
+% \end{macro}
+
+% --------------------
+% Page style (copied from kaobook)
+% --------------------
+
+% Main page style.
+% Displays the chapter number, chapter name, a vertical line, and the page number
+\renewpagestyle{scrheadings}{
+  {
+    \smash{
+      \hspace{-\headmarginparwidth}
+      \hspace{-\headmarginparsep}
+      \makebox[\headtotal][l]{
+        \makebox[7mm][r]{\thepage}
+        \makebox[3mm]{}
+        \rule[-1mm]{0.5pt}{18mm}
+        \makebox[3mm]{}
+        \makebox[\headtextwidth][l]{\leftmark}
+      }
+    }
+  }
+  {
+    \smash{
+      \makebox[0pt][l]{
+        \makebox[\headtotal][r]{
+          \makebox[\headtextwidth][r]{\hfill\rightmark}
+          \makebox[3mm]{}
+          \rule[-1mm]{0.5pt}{18mm}
+          \makebox[3mm]{}
+          \makebox[7mm][l]{\thepage}
+        }
+      }
+    }
+  }
+  {
+    \smash{
+      \makebox[0pt][l]{
+        \makebox[\headtotal][r]{
+          \makebox[\headtextwidth][r]{\hfill\rightmark}
+          \makebox[3mm]{}
+          \rule[-1mm]{0.5pt}{18mm}
+          \makebox[3mm]{}
+          \makebox[7mm][l]{\thepage}
+        }
+      }
+    }
+  }
+}{
+  {}
+  {}
+  {}
+}
+
+% Plain page style
+\renewpagestyle{plain.scrheadings}{
+  {}
+  {}
+  {}
+}{
+  {}
+  {}
+  {}
+}
+
+% --------------------
+% Chapter style (copied from kaobook)
+% --------------------
+
+\DeclareDocumentCommand{\chapterstyleplain}{}{
+  \renewcommand{\chapterlinesformat}[3]{\@hangfrom{##2}{##3}}
+  \renewcommand*{\chapterformat}{
+    \mbox{
+      \chapappifchapterprefix{\nobreakspace}\thechapter
+      \autodot\IfUsePrefixLine{}{\enskip}
+    }
+  }
+  \RedeclareSectionCommand[beforeskip=0cm,afterskip=10mm]{chapter}
+}
+
+\DeclareDocumentCommand{\chapterstyleverticalline}{}{
+  \renewcommand*{\chapterformat}{
+    \mbox{
+      \chapappifchapterprefix{\nobreakspace}
+      \scalebox{2.85}{\thechapter\autodot}
+    }
+  }
+  \renewcommand\chapterlinesformat[3]{
+    \vspace{3.5mm}
+    \if@twoside
+      \Ifthispageodd{
+        \smash{
+          \makebox[0pt][l]{
+            \parbox[b]{\textwidth}{\flushright{##3}}
+            \makebox[\marginparsep][c]{\rule[-2mm]{1pt}{27.4mm+\f@size mm}}
+            \parbox[b]{\marginparwidth}{##2}
+          }
+        }
+      }{
+        \smash{
+          \makebox[\textwidth][r]{
+            \parbox[b]{\marginparwidth}{\flushright{##2}}
+            \makebox[\marginparsep][c]{\rule[-2mm]{1pt}{27.4mm+\f@size mm}}
+            \parbox[b]{\textwidth}{\flushleft{##3}}
+          }
+        }
+      }
+    \else
+      \smash{
+        \makebox[0pt][l]{
+          \parbox[b]{\textwidth}{\flushright{##3}}
+          \makebox[\marginparsep][c]{\rule[-2mm]{1pt}{27.4mm+\f@size mm}}
+          \parbox[b]{\marginparwidth}{##2}
+        }
+      }
+    \fi
+  }
+  \RedeclareSectionCommand[beforeskip=0cm,afterskip=10mm]{chapter}
+}
+
+\DeclareDocumentCommand{\chapterstyle}{m}{
+  \ifthenelse{\equal{#1}{plain}}{
+    \chapterstyleplain
+  }{
+    \ifthenelse{\equal{#1}{vertical line}}{
+      \chapterstyleverticalline
+    }{
+      \msg_error:nnn{thesis}{chapterstyle}{#1}
+    }
+  }
+}
+
+% --------------------
+% List style
+% --------------------
+
+\definecolor[named]{itemColor}{rgb}{0.31,0.31,0.33}
+
+\renewcommand{\labelitemi}{\scriptsize\color{itemColor}$\blacktriangleright$}
+\renewcommand{\labelitemii}{\textbullet}
+
+\setlist[itemize]{noitemsep}
+\setlist[enumerate]{noitemsep}
+\setlist[description]{
+  noitemsep,
+  font={\bfseries\sffamily\small\color{itemColor}},
+}
+
+% --------------------
+% Paragraph formatting
+% --------------------
+
+%<package>\RequirePackage{ragged2e}
+%<package>\RequirePackage{setspace}
+%<package>\RequirePackage{hyphenat}
+%<package>\RequirePackage{microtype}
+%<package>\RequirePackage{needspace}
+%<package>\RequirePackage{xspace}
+
+% Settings for a normal paragraph
+\NewDocumentCommand{\@body@par}{}{
+  \justifying
+  \singlespacing
+  \normalfont
+  \normalsize
+}
+
+% Settings for paragraphs in the margins
+\NewDocumentCommand{\@margin@par}{}{
+  \justifying
+  \normalfont
+  \footnotesize
+}
+
+% By default, use @body@par settings
+\@body@par
+
+%<package>\RequirePackage{placeins}
+\extrafloats{100}
+
+% --------------------
+% Margin notes (copied from kaobook)
+% --------------------
+%<package>\RequirePackage{marginnote}
+%<package>\RequirePackage{marginfix}
+%<package>\RequirePackage{sidenotes}
+%<package>\RequirePackage{chngcntr}
+
+\counterwithin*{sidenote}{chapter}
+
+\renewcommand*{\raggedleftmarginnote}{}
+\renewcommand*{\raggedrightmarginnote}{}
+\renewcommand*{\marginfont}{\@margin@par}
+\renewcommand{\marginnotevadjust}{0.8mm}
+\marginposadjustment=0.1mm
+\marginheightadjustment=.5cm
+
+\def\kao@if@nblskip#1{
+  \expandafter\ifx\@car#1\@nil*
+    \expandafter\@firstoftwo
+  \else
+    \expandafter\@secondoftwo
+  \fi
+}
+
+\newif\ifinfloat
+\AtBeginEnvironment{tcolorbox}{\infloattrue}
+\AtBeginEnvironment{minipage}{\infloattrue}
+
+\def\IfInFloatingEnvir{
+  \ifinfloat
+    \expandafter\@firstoftwo
+  \else
+    \expandafter\@secondoftwo
+  \fi
+}
+
+\let\oldmarginnote\marginnote
+\RenewDocumentCommand\marginnote{ o m }{
+  \IfNoValueOrEmptyTF{#1}{
+    \IfInFloatingEnvir{
+      \oldmarginnote{#2}
+    }{
+      \marginpar{\@margin@par#2}
+    }
+  }{
+    \oldmarginnote{#2}[\kao@if@nblskip{#1}{\@cdr#1\@nil\baselineskip}{#1}]
+  }
+}
+
+% Initially set the counter to zero instead of 1, and update it before printing the sidenote.
+\setcounter{sidenote}{0}
+\RenewDocumentCommand\sidenote{ o o +m }{
+  \IfNoValueOrEmptyTF{#1}{
+    \refstepcounter{sidenote}% This command has been moved here
+  }{
+  }
+  \sidenotemark[#1]
+  \sidenotetext[#1][#2]{#3}
+  \@sidenotes@multimarker
+}
+
+% Formatting sidenotes
+\RenewDocumentCommand\@sidenotes@thesidenotemark{ m }{
+  \leavevmode
+  \ifhmode
+    \edef\@x@sf{\the\spacefactor}
+    \nobreak
+  \fi
+  \hbox{\@textsuperscript{\normalfont#1}}
+  \ifhmode
+    \spacefactor\@x@sf
+  \fi
+  \relax
+}
+
+% number, offset, text
+\RenewDocumentCommand{\sidenotetext}{ o o +m }{
+  \IfNoValueOrEmptyTF{#1}{
+    \marginnote[#2]{\thesidenote : \enskip#3}
+  }{
+    \marginnote[#2]{#1 : \enskip#3}
+  }
+}
+
+\ExplSyntaxOff
+
+\endinput
