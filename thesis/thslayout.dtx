@@ -201,6 +201,13 @@
   {}
 }
 
+\let\oldpart\part
+\renewcommand{\part}[1]{%
+  \pagelayout{wide}
+  \oldpart{#1}
+  \pagelayout{margin}
+}
+
 % --------------------
 % Chapter style (copied from kaobook)
 % --------------------
