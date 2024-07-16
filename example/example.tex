@@ -1,5 +1,5 @@
 \documentclass[
-  a4paper,
+  b5paper,
   fontsize = 11pt,
   english,
   openany,
@@ -7,7 +7,30 @@
   roman equations,
 ]{thesis}
 
+\usepackage{babel}
+
+% This should yield a good looking document for b5paper
+\RenewDocumentCommand{\marginlayout}{}{
+  \newgeometry{
+    top=22.9mm,
+    bottom=22.9mm,
+    inner=13.3mm,
+    textwidth=100mm,
+    marginparsep=3mm,
+    marginparwidth=46mm,
+  }%
+  \recalchead%
+}
+
 \usepackage{blindtext}
+
+% Definition of "notations" glossary style
+\newglossary*{notations}{Notations}
+\loadglsentries[notations]{notations.tex}
+
+\makeindex[intoc]
+\makeglossaries
+\glsdisablehyper
 
 \title{Example for the thesis class}
 \author{Gaëtan Staquet}
@@ -23,7 +46,7 @@
   \section{Theorems}
 
   \begin{definition*}{def:box}
-    This is a definition.
+    This is a definition.\index{definition}
   \end{definition*}
 
   This is some text with a marginnote next to it.\marginnote{Test of a margin note.}
@@ -39,6 +62,49 @@
   \restate{def:box}
   \marginnote{\restate{def:box:margin}}
 
+  \section{Restate equations}
+
+  \chapter{Various}
+
+  \section{Floats}
+
+  Floats will always go to the top of a page.
+  It is thus impossible to have a figure on the same page a chapter is started.
+  If a float is big enough, it will go on a page on its own.
+  Otherwise, text will come after it.
+
+  \begin{figure}
+    \includegraphics[width=\totalwidth]{example-image-a}
+    \caption{A figure.}
+  \end{figure}
+
+  \begin{algorithm}
+    \caption{An algorithm.}
+    \begin{algorithmic}[1]
+      \Require Some requirements
+      \Ensure Does something
+      \Statex
+      \While {some condition holds}
+        \State Do something
+        \Comment{This is a very important step}
+      \EndWhile
+      \State \Return 4
+    \end{algorithmic}
+  \end{algorithm}
+
+  \begin{figure}
+    \begin{minted}[linenos]{JSON}
+{
+  "title": "Some JSON document",
+  "metadata": {
+    "why": "To give an example of minted",
+    "lines": 7
+  }
+}
+    \end{minted}
+    \caption{A listing (given as a figure).}
+  \end{figure}
+
   \part{Blind text}
 
   \Blinddocument
@@ -46,5 +112,16 @@
   \backmatter
 
   \Blinddocument
+
+  \printbibliography
+
+  \printindex\label{index}
+
+  \glsaddall[types={notations}]
+  \printglossary[
+    type=notations,
+    style=long-symbol,
+    nonumberlist,
+  ]
 
 \end{document}

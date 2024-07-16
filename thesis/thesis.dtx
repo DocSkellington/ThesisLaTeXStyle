@@ -30,7 +30,13 @@
 %<class>\PassOptionsToClass{toc=index}{scrbook}
 %<class>\PassOptionsToClass{toc=bibliography}{scrbook}
 %
+%<class>\RequirePackage[xindy,original]{imakeidx} % Must be loaded before hyperref
+%
+%<class>\RequirePackage{xurl}
 %<class>\RequirePackage{hyperref}
+%<class>\RequirePackage{bookmark}
+
+%<class>\RequirePackage{csquotes}
 %
 %<class>\RequirePackage[dvipsnames,svgnames,table]{xcolor}
 %
@@ -61,6 +67,8 @@
 %<class>\RequirePackage{thstheorem}
 %
 %<class>\RequirePackage{xparse}
+%
+%<class>\RequirePackage[abbreviations, xindy, toc, numberedsection=nameref, postdot, stylemods=longbooktabs]{glossaries-extra}
 %
 %<*driver>
 \documentclass[a4paper]{l3doc}
@@ -162,7 +170,40 @@
   \setmathfont{STIX}[range=\models]
 }
 
+% Tighten up space between displays (\eg, equations) and make symmetric (from tufte-latex)
+\setlength\abovedisplayskip{6pt plus 2pt minus 4pt}
+\setlength\belowdisplayskip{6pt plus 2pt minus 4pt}
+\abovedisplayskip 10\p@ \@plus2\p@ \@minus5\p@
+\abovedisplayshortskip \z@ \@plus3\p@
+\belowdisplayskip \abovedisplayskip
+\belowdisplayshortskip 6\p@ \@plus3\p@ \@minus3\p@
+
 \ExplSyntaxOff
+
+\newglossarystyle{long-symbol}{%
+  \setglossarystyle{longheader}%
+  \setlength{\glsdescwidth}{.8\hsize}
+  \renewcommand*{\glossentry}[2]{%
+    \glsentryitem{##1}\glstarget{##1}{\glossentrysymbol{##1}}%
+    & \glossentrydesc{##1}.%
+    % & ##2%
+    \tabularnewline
+  }
+}
+
+\colorlet{LinkColor}{DarkOrange!70!black}
+\colorlet{CiteColor}{DarkOrange!70!black}
+\hypersetup{
+  pdfborder={0 0 0}, % Suppress border around pdf
+  bookmarksdepth=subsection,
+  bookmarksopen=true, % Expand the bookmarks as soon as the pdf file is opened
+  linktoc=all, % Toc entries and numbers links to pages
+  breaklinks=true,
+  colorlinks=true,
+  citecolor = CiteColor,
+  linkcolor = LinkColor,
+  urlcolor = LinkColor,
+}
 
 % \end{implementation}
 
