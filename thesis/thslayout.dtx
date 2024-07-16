@@ -58,6 +58,18 @@
   \pagelayout{wide}
 }
 
+\NewDocumentCommand{\ifInMargin}{m m}{
+  \ifdim \columnwidth<\marginparwidth
+    {#1}
+  \else
+    \ifdim \columnwidth=\marginparwidth
+      {#1}
+    \else
+      {#2}
+    \fi
+  \fi
+}
+
 % --------------------
 % Error messages
 % --------------------
@@ -327,6 +339,7 @@
   \justifying
   \normalfont
   \footnotesize
+  \setlength{\parindent}{0em}% Suppress indentation
 }
 
 % By default, use @body@par settings
@@ -385,24 +398,10 @@
   }
 }
 
-% Environment to hold a margin figure (from the sidenotes package)
-% We redefine it here to force \marginnote instead of \marginpar
-% This permits the use of marginfigure within example (or other environments)
-% Captions may not work but I don't care
-\RenewDocumentEnvironment{marginfigure}{o}{%
-  \begin{lrbox}{\@sidenotes@marginfigurebox}%
-    \begin{minipage}{\marginparwidth}%
-}{%
-    \end{minipage}%
-  \end{lrbox}%
-  \marginnote[#1]{\usebox{\@sidenotes@marginfigurebox}}
-}
-
-% Initially set the counter to zero instead of 1, and update it before printing the sidenote.
 \setcounter{sidenote}{0}
 \RenewDocumentCommand\sidenote{ o o +m }{
   \IfNoValueOrEmptyTF{#1}{
-    \refstepcounter{sidenote}% This command has been moved here
+    \refstepcounter{sidenote}
   }{
   }
   \sidenotemark[#1]
@@ -410,7 +409,6 @@
   \@sidenotes@multimarker
 }
 
-% Formatting sidenotes
 \RenewDocumentCommand\@sidenotes@thesidenotemark{ m }{
   \leavevmode
   \ifhmode
@@ -433,6 +431,18 @@
   }
 }
 
+% Environment to hold a margin figure (from the sidenotes package)
+% We redefine it here to force \marginnote instead of \marginpar
+% This permits the use of marginfigure within example (or other environments)
+% Captions may not work but I don't care
+\RenewDocumentEnvironment{marginfigure}{o}{%
+  \begin{lrbox}{\@sidenotes@marginfigurebox}%
+    \begin{minipage}{\marginparwidth}%
+}{%
+    \end{minipage}%
+  \end{lrbox}%
+  \marginnote[#1]{\usebox{\@sidenotes@marginfigurebox}}
+}
 
 % ---------
 % Floats
