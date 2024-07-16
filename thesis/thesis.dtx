@@ -103,6 +103,21 @@
 %    \end{macrocode}
 % \end{macro}
 
+%<package>\RequirePackage{appendix}
+% To force cleveref to display appendix instead of chapter
+\AtBeginEnvironment{appendices}{\crefalias{chapter}{appendix}}
+
+% Allow use of \Cref/\cref in section titles
+\usepackage[final]{crossreftools}
+\pdfstringdefDisableCommands{
+  \let\Cref\crtCref
+  \let\cref\crtcref
+}
+
+% Only prints (ref) when using \cref{eq:label}.
+\crefname{equation}{}{}
+\Crefname{equation}{}{}
+
 \ExplSyntaxOff
 
 % \end{implementation}

@@ -145,7 +145,7 @@
 % Main page style.
 % Displays the chapter number, chapter name, a vertical line, and the page number
 \renewpagestyle{scrheadings}{
-  {
+  { % Left page in two-side
     \smash{
       \hspace{-\headmarginparwidth}
       \hspace{-\headmarginparsep}
@@ -158,7 +158,7 @@
       }
     }
   }
-  {
+  { % Right page in two-side
     \smash{
       \makebox[0pt][l]{
         \makebox[\headtotal][r]{
@@ -171,7 +171,7 @@
       }
     }
   }
-  {
+  { % All pages in one-side
     \smash{
       \makebox[0pt][l]{
         \makebox[\headtotal][r]{
