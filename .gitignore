@@ -313,3 +313,5 @@ example/thslayout.sty
 example/thsbiblio.sty
 example/thstheorem.sty
 example/example.pdf
+example/*gl*-abr
+example/*notations-*

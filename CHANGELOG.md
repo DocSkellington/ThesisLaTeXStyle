@@ -9,3 +9,4 @@
     - Display Appendix
     - Display `(ref)` for equations
     - Commands can be used in section titles
+  - Index and glossaries
