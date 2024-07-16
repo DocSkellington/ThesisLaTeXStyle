@@ -420,6 +420,66 @@
   }
 }
 
+
+% ---------
+% Floats
+% ---------
+\floatsetup{
+  margins = hangoutside,
+  facing = yes,
+  capposition = bottom,
+}
+\floatsetup[algorithm]{
+  margins = centering,
+  capposition = above,
+  floatwidth = \totalwidth,
+}
+\floatplacement{algorithm}{t}
+
+\captionsetup[algorithm]{labelsep=colon}
+\addtokomafont{captionlabel}{\bfseries}
+
+\ExplSyntaxOff
+\renewcommand*{\figureformat}{\figurename~\thefigure}
+\renewcommand*{\tableformat}{\tablename~\thetable}
+% Drawing vertical lines in algorithmicx (https://tex.stackexchange.com/a/147751)
+\usetikzlibrary{tikzmark, calc}
+\newcommand{\ALGtikzmarkcolor}{black}
+\newcommand{\ALGtikzmarkextraindent}{4pt}
+\newcommand{\ALGtikzmarkverticaloffsetstart}{-.5ex}
+\newcommand{\ALGtikzmarkverticaloffsetend}{-.5ex}
+\newcounter{ALG@tikzmark@tempcnta}
+\newcommand\ALG@tikzmark@start{%
+  \global\let\ALG@tikzmark@last\ALG@tikzmark@starttext%
+  \expandafter\edef\csname ALG@tikzmark@\theALG@nested\endcsname{\theALG@tikzmark@tempcnta}%
+  \tikzmark{ALG@tikzmark@start@\csname ALG@tikzmark@\theALG@nested\endcsname}%
+  \addtocounter{ALG@tikzmark@tempcnta}{1}%
+}
+\def\ALG@tikzmark@starttext{start}
+\newcommand\ALG@tikzmark@end{%
+  \ifx\ALG@tikzmark@last\ALG@tikzmark@starttext
+  \else
+    \tikzmark{ALG@tikzmark@end@\csname ALG@tikzmark@\theALG@nested\endcsname}%
+    \tikz[overlay,remember picture]
+      \draw[\ALGtikzmarkcolor]
+        let
+          \p{S}=($(pic cs:ALG@tikzmark@start@\csname ALG@tikzmark@\theALG@nested\endcsname)+(\ALGtikzmarkextraindent,\ALGtikzmarkverticaloffsetstart)$),
+          \p{E}=($(pic cs:ALG@tikzmark@end@\csname ALG@tikzmark@\theALG@nested\endcsname)+(\ALGtikzmarkextraindent,\ALGtikzmarkverticaloffsetend)$)
+        in
+          (\x{S},\y{S})--(\x{S},\y{E})
+      ;%
+  \fi
+  \gdef\ALG@tikzmark@last{end}%
+}
+\apptocmd{\ALG@beginblock}{\ALG@tikzmark@start}{}{\errmessage{failed to patch}}
+\pretocmd{\ALG@endblock}{\ALG@tikzmark@end}{}{\errmessage{failed to patch}}
+% end vertical rule patch for algorithmicx
+\ExplSyntaxOn
+
+% References to algorithms lines point to the correct algorithm
+% https://tex.stackexchange.com/a/156404
+\providecommand\theHALG@line{\thealgorithm.\arabic{ALG@line}}
+
 \ExplSyntaxOff
 
 \endinput

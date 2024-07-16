@@ -26,6 +26,9 @@
 %<class>\RequireLuaTeX
 %
 %<class>\LoadClassWithOptions{scrbook}
+%<class>\PassOptionsToClass{toc=listof}{scrbook}
+%<class>\PassOptionsToClass{toc=index}{scrbook}
+%<class>\PassOptionsToClass{toc=bibliography}{scrbook}
 %
 %<class>\RequirePackage{hyperref}
 %
@@ -37,6 +40,19 @@
 %<class>\RequirePackage{thmtools}
 %<class>\RequirePackage{mathtools}
 %<class>\RequirePackage[warnings-off={mathtools-colon,mathtools-overbracket}, math-style=TeX]{unicode-math}
+%
+%<class>\RequirePackage{booktabs}
+%<class>\RequirePackage{tikz}
+%<class>\RequirePackage[hypcap=true]{caption}
+%<class>\RequirePackage{floatrow}
+%<class>\AtEndPreamble{\RequirePackage{scrhack}}
+%
+%<class>\RequirePackage[chapter]{minted}
+%<class>\RequirePackage{algorithm}
+%<class>\RequirePackage[noend]{algpseudocode}
+%<class>\counterwithin{algorithm}{chapter}
+%<class>\setminted{fontsize=\footnotesize}
+%<class>\usemintedstyle{algol_nu}
 %
 %<class>\RequirePackage[nameinlink]{cleveref}
 %

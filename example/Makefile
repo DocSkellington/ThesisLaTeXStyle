@@ -1,5 +1,5 @@
 build:
-	latexmk -pdflua example.tex
+	latexmk -pdflua -shell-escape example.tex
 
 clean:
 	-rm thesis.cls \
