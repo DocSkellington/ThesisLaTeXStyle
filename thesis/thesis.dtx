@@ -149,6 +149,19 @@
 \addtokomafont{paragraph}{\normalfont\bfseries}
 \setkomafont{descriptionlabel}{\normalfont\bfseries}
 
+\RequirePackage[force]{filehook}
+\setromanfont[Scale=1.04]{Libertinus Serif}
+\setsansfont[Scale=1]{Libertinus Sans}
+\setmonofont[Scale=.89]{Liberation Mono}
+\setmathfont{Latin Modern Math}
+\setmathfont{TeX Gyre Pagella Math}[range=bb]
+\setmathfont{STIXTwoMath-Regular}[range=cal]
+\AtBeginDocument{% Simplistic redefinitions of missing symbols
+  \RenewDocumentCommand{\Coloneq}{}{::=}
+  \RenewDocumentCommand{\Coloneqq}{}{::=}
+  \setmathfont{STIX}[range=\models]
+}
+
 \ExplSyntaxOff
 
 % \end{implementation}
