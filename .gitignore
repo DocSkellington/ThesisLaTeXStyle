@@ -315,3 +315,5 @@ example/thstheorem.sty
 example/example.pdf
 example/*gl*-abr
 example/*notations-*
+example/*.bbl*
+example/*.bcf*

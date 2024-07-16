@@ -16,13 +16,15 @@
     bottom=22.9mm,
     inner=13.3mm,
     textwidth=100mm,
-    marginparsep=3mm,
+    marginparsep=5mm,
     marginparwidth=46mm,
   }%
   \recalchead%
 }
 
 \usepackage{blindtext}
+
+\addbibresource{references.bib}
 
 % Definition of "notations" glossary style
 \newglossary*{notations}{Notations}
@@ -39,9 +41,13 @@
   \frontmatter
   \maketitle
 
+  \tableofcontents
+
   \mainmatter
 
   \chapter{Mathematical tools}
+
+  \chapterTOC
 
   \section{Theorems}
 
@@ -53,9 +59,13 @@
 
   Likewise with a sidenote.\sidenote{Test of a side note.}
 
+  Test of citations~\sidecite{HopcroftU79,Angluin87}.
+
   \begin{equation}
-    a = b
+    a = b\label{eq:a:b}
   \end{equation}
+  \restatableMarginEquation{\aEqualb}{a = b}{eq:a:b}
+  \marginnote{\aEqualb}
 
   \subsection{Restate boxes}
 

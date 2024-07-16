@@ -24,6 +24,91 @@
 
 \ExplSyntaxOn
 
+\RequirePackage[
+  citestyle=alphabetic,
+  bibstyle=alphabetic,
+  backend=biber,
+  hyperref=true,
+  backref=true,
+  citecounter=true,
+  pagetracker=true,
+  citetracker=true,
+  ibidtracker=context,
+  autopunct=true,
+  autocite=plain,
+  maxbibnames=10,
+]{biblatex}
+
+% Suppress some of the fields in a reference
+\AtEveryBibitem{
+  \clearfield{archivePrefix}
+  \clearfield{arxivId}
+  \clearfield{pmid}
+  \clearfield{eprint}
+  \ifentrytype{online}{}{\ifentrytype{misc}{}{\clearfield{url}}}
+  \ifentrytype{book}{\clearfield{doi}}{}
+}
+
+\DeclareSourcemap{
+  \maps[datatype=bibtex]{
+    \map[overwrite]{
+      \step[fieldsource=month, match={jan}, replace=${1}]
+      \step[fieldsource=month, match={feb}, replace=${2}]
+      \step[fieldsource=month, match={mar}, replace=${3}]
+      \step[fieldsource=month, match={apr}, replace=${4}]
+      \step[fieldsource=month, match={may}, replace=${5}]
+      \step[fieldsource=month, match={jun}, replace=${6}]
+      \step[fieldsource=month, match={jul}, replace=${7}]
+      \step[fieldsource=month, match={aug}, replace=${8}]
+      \step[fieldsource=month, match={sep}, replace=${9}]
+      \step[fieldsource=month, match={oct}, replace=${10}]
+      \step[fieldsource=month, match={nov}, replace=${11}]
+      \step[fieldsource=month, match={dec}, replace=${12}]
+    }
+  }
+}
+
+\defbibheading{bibliography}[\bibname]{\chapter{#1}}
+
+% Citations in margin
+
+\NewDocumentCommand{\formatmargincitation}{m}{
+  \parencite{#1}:~\citeauthor*{#1}~(\citeyear{#1}),~\citetitle{#1}
+}
+
+% biblatex-like commands that also print a citation in the margin
+% Usage:
+    % First optional argument is always vertical shift and must be given as an (empty) argument when using following a postnote and/or prenote
+    % Second optional argument is always the postnote if the third argument isn't specified or is the prenote if the third argument is specified (same pattern as the biblatex commands)
+    % Third optional argument is always the postnote
+    % Mandatory argument is always the citation key(s)
+
+% Command to \cite and print a citation in the margin
+% First optional argument: vertical shift
+% Second optional argument: postnote if the third argument isn't specified; prenote if the third argument is specified (same pattern as the \textcite command)
+% Third optional argument: postnote
+% Mandatory argument: citation key
+\NewDocumentCommand{\sidecite}{o o o m}{
+  \DeclareDocumentCommand{\thsbiblio@marginnote}{m}{
+    \marginnote[#1]{##1}
+  }
+  \DeclareCiteCommand{\thsbiblio@sidecite}[\thsbiblio@marginnote]{}{\formatmargincitation{\thefield{entrykey}}}{\\}{}
+  \IfNoValueOrEmptyTF{#2}{
+    \cite{#4}\thsbiblio@sidecite{#4}
+  }{
+    \ifNoValueOrEmptyTF{#3}{
+      \IfNoValueTF{#3}{
+        \cite[#2]{#4}\thsbiblio@sidecite{#4}
+      }{
+        \cite[#2][]{#4}\thsbiblio@sidecite{#4}
+      }
+    }{
+      \cite[#2][#3]{#4}\thsbiblio@sidecite{#4}
+    }
+  }
+}
+\NewDocumentCommand{\margincite}{o o o m}{\sidecite[#1][#2][#3]{#4}}
+
 \ExplSyntaxOff
 
 \endinput
