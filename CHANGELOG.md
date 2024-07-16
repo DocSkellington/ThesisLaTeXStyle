@@ -10,3 +10,4 @@
     - Display `(ref)` for equations
     - Commands can be used in section titles
   - Index and glossaries
+  - Command for TOC of chapter

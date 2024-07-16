@@ -35,6 +35,7 @@
 %<class>\RequirePackage{xurl}
 %<class>\RequirePackage{hyperref}
 %<class>\RequirePackage{bookmark}
+%<class>\RequirePackage{etoc}
 
 %<class>\RequirePackage{csquotes}
 %
@@ -203,6 +204,14 @@
   citecolor = CiteColor,
   linkcolor = LinkColor,
   urlcolor = LinkColor,
+}
+
+\NewDocumentCommand{\chapterTOC}{}{
+  \begingroup
+    \etocarticlestyle
+    \def\contentsname{Chapter contents}
+    \localtableofcontents
+  \endgroup
 }
 
 % \end{implementation}
