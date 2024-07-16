@@ -230,7 +230,11 @@
         \smash{
           \makebox[0pt][l]{
             \parbox[b]{\textwidth}{\flushright{##3}}
-            \makebox[\marginparsep][c]{\rule[-2mm]{1pt}{27.4mm+\f@size mm}}
+            \makebox[3mm]{}
+            \makebox[\marginparsep][c]{
+              \rule[-2mm]{1pt}{27.4mm+\f@size mm}
+            }
+            \makebox[3mm]{}
             \parbox[b]{\marginparwidth}{##2}
           }
         }
@@ -238,7 +242,11 @@
         \smash{
           \makebox[\textwidth][r]{
             \parbox[b]{\marginparwidth}{\flushright{##2}}
-            \makebox[\marginparsep][c]{\rule[-2mm]{1pt}{27.4mm+\f@size mm}}
+            \makebox[3mm]{}
+            \makebox[\marginparsep][c]{
+              \rule[-2mm]{1pt}{27.4mm+\f@size mm}
+            }
+            \makebox[3mm]{}
             \parbox[b]{\textwidth}{\flushleft{##3}}
           }
         }
@@ -247,7 +255,11 @@
       \smash{
         \makebox[0pt][l]{
           \parbox[b]{\textwidth}{\flushright{##3}}
-          \makebox[\marginparsep][c]{\rule[-2mm]{1pt}{27.4mm+\f@size mm}}
+          \makebox[3mm]{}
+          \makebox[\marginparsep][c]{
+            \rule[-2mm]{1pt}{27.4mm+\f@size mm}
+          }
+          \makebox[3mm]{}
           \parbox[b]{\marginparwidth}{##2}
         }
       }
