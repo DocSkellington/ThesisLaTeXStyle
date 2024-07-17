@@ -25,21 +25,25 @@
 %<class>\RequirePackage{iftex}
 %<class>\RequireLuaTeX
 %
-%<class>\LoadClassWithOptions{scrbook}
+%<class>\DeclareOption*{\PassOptionsToClass{\CurrentOption}{scrbook}}
+%<class>\ProcessOptions
 %<class>\PassOptionsToClass{toc=listof}{scrbook}
 %<class>\PassOptionsToClass{toc=index}{scrbook}
 %<class>\PassOptionsToClass{toc=bibliography}{scrbook}
+%<class>\PassOptionsToClass{parskip=half}{scrbook}
+%<class>\PassOptionsToClass{headings=optiontoheadandtoc}{scrbook}
+%<class>\LoadClass{scrbook}
+%
+%<class>\RequirePackage{thslayout}
 %
 %<class>\RequirePackage[xindy,original]{imakeidx} % Must be loaded before hyperref
 %
 %<class>\RequirePackage{xurl}
-%<class>\RequirePackage{hyperref}
+%<class>\RequirePackage[pdfusetitle]{hyperref}
 %<class>\RequirePackage{bookmark}
 %<class>\RequirePackage{etoc}
 
 %<class>\RequirePackage{csquotes}
-%
-%<class>\RequirePackage[dvipsnames,svgnames,table]{xcolor}
 %
 %<class>\RequirePackage{amssymb}
 %<class>\RequirePackage{amsmath}
@@ -48,22 +52,8 @@
 %<class>\RequirePackage{mathtools}
 %<class>\RequirePackage[warnings-off={mathtools-colon,mathtools-overbracket}, math-style=TeX]{unicode-math}
 %
-%<class>\RequirePackage{booktabs}
-%<class>\RequirePackage{tikz}
-%<class>\RequirePackage[hypcap=true]{caption}
-%<class>\RequirePackage{floatrow}
-%<class>\AtEndPreamble{\RequirePackage{scrhack}}
+%<class>\RequirePackage[nameinlink,capitalize,noabbrev]{cleveref}
 %
-%<class>\RequirePackage[chapter]{minted}
-%<class>\RequirePackage{algorithm}
-%<class>\RequirePackage[noend]{algpseudocode}
-%<class>\counterwithin{algorithm}{chapter}
-%<class>\setminted{fontsize=\footnotesize}
-%<class>\usemintedstyle{algol_nu}
-%
-%<class>\RequirePackage[nameinlink]{cleveref}
-%
-%<class>\RequirePackage{thslayout}
 %<class>\RequirePackage{thsbiblio}
 %<class>\RequirePackage{thstheorem}
 %
@@ -107,10 +97,6 @@
 
 \ExplSyntaxOn
 
-\DeclareKeys{
-}
-\ProcessKeyOptions
-
 % Print latin words in italics (The xspace package is required but we already loaded it in the class)
 
 % \begin{macro}{hairsp, etal, denovo, adhoc, etcetera, etc, ie, eg, vs, cf}
@@ -128,7 +114,7 @@
 %    \end{macrocode}
 % \end{macro}
 
-%<package>\RequirePackage{appendix}
+\RequirePackage{appendix}
 % To force cleveref to display appendix instead of chapter
 \AtBeginEnvironment{appendices}{\crefalias{chapter}{appendix}}
 
@@ -192,6 +178,8 @@
   }
 }
 
+\ExplSyntaxOn
+
 \colorlet{LinkColor}{DarkOrange!70!black}
 \colorlet{CiteColor}{DarkOrange!70!black}
 \hypersetup{
@@ -206,13 +194,22 @@
   urlcolor = LinkColor,
 }
 
+% --------
+% Table of contents
+% --------
+
+\renewcommand*{\@pnumwidth}{2em}
+
 \NewDocumentCommand{\chapterTOC}{}{
   \begingroup
     \etocarticlestyle
+    \setlength{\parskip}{0pt}
     \def\contentsname{Chapter contents}
     \localtableofcontents
   \endgroup
 }
+
+\ExplSyntaxOff
 
 % \end{implementation}
 

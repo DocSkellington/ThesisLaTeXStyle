@@ -96,7 +96,7 @@
   \IfNoValueOrEmptyTF{#2}{
     \cite{#4}\thsbiblio@sidecite{#4}
   }{
-    \ifNoValueOrEmptyTF{#3}{
+    \IfNoValueOrEmptyTF{#3}{
       \IfNoValueTF{#3}{
         \cite[#2]{#4}\thsbiblio@sidecite{#4}
       }{
