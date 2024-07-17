@@ -98,6 +98,7 @@
   \setlength{\headmarginparwidth}{\marginparwidth}
   \setlength{\headtotal}{\headtextwidth+\headmarginparsep+\headmarginparwidth}
   \setlength{\totalwidth}{\textwidth+\marginparwidth}
+  \edef\marginnotetextwidth{\the\textwidth}
 }
 %    \end{macrocode}
 % \end{macro}
@@ -228,8 +229,7 @@
   \renewcommand{\chapterlinesformat}[3]{\@hangfrom{##2}{##3}}
   \renewcommand*{\chapterformat}{
     \mbox{
-      \chapappifchapterprefix{\nobreakspace}\thechapter
-      \autodot\IfUsePrefixLine{}{\enskip}
+      \chapappifchapterprefix{\nobreakspace}\thechapter\autodot\IfUsePrefixLine{}{\enskip}
     }
   }
   \RedeclareSectionCommand[beforeskip=0cm,afterskip=10mm]{chapter}
@@ -238,8 +238,7 @@
 \DeclareDocumentCommand{\chapterstyleverticalline}{}{
   \renewcommand*{\chapterformat}{
     \mbox{
-      \chapappifchapterprefix{\nobreakspace}
-      \scalebox{2.85}{\thechapter\autodot}
+      \chapappifchapterprefix{\nobreakspace}\scalebox{2.85}{\thechapter\autodot}
     }
   }
   \renewcommand\chapterlinesformat[3]{
@@ -347,13 +346,13 @@
 % --------------------
 % Margin notes (copied from kaobook)
 % --------------------
-%<package>\RequirePackage{marginnote}
-%<package>\RequirePackage{marginfix}
-%<package>\RequirePackage{sidenotes}
-%<package>\RequirePackage{chngcntr}
+\RequirePackage[parboxrestore,heightadjust]{marginnote}
+\RequirePackage{marginfix}
+\RequirePackage{sidenotes}
+\RequirePackage{chngcntr}
 
 \counterwithin*{sidenote}{chapter}
-
+%
 \renewcommand*{\raggedleftmarginnote}{}
 \renewcommand*{\raggedrightmarginnote}{}
 \renewcommand*{\marginfont}{\@margin@par}

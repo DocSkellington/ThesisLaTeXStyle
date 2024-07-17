@@ -34,6 +34,8 @@
 %<class>\PassOptionsToClass{headings=optiontoheadandtoc}{scrbook}
 %<class>\LoadClass{scrbook}
 %
+%<class>\RequirePackage{xparse}
+%
 %<class>\RequirePackage{thslayout}
 %
 %<class>\RequirePackage[xindy,original]{imakeidx} % Must be loaded before hyperref
@@ -50,14 +52,13 @@
 %<class>\RequirePackage{amsthm}
 %<class>\RequirePackage{thmtools}
 %<class>\RequirePackage{mathtools}
+%
 %<class>\RequirePackage[warnings-off={mathtools-colon,mathtools-overbracket}, math-style=TeX]{unicode-math}
 %
 %<class>\RequirePackage[nameinlink,capitalize,noabbrev]{cleveref}
 %
 %<class>\RequirePackage{thsbiblio}
 %<class>\RequirePackage{thstheorem}
-%
-%<class>\RequirePackage{xparse}
 %
 %<class>\RequirePackage[abbreviations, xindy, toc, numberedsection=nameref, postdot, stylemods=longbooktabs]{glossaries-extra}
 %
@@ -97,7 +98,11 @@
 
 \ExplSyntaxOn
 
-% Print latin words in italics (The xspace package is required but we already loaded it in the class)
+\DeclareExpandableDocumentCommand{\IfNoValueOrEmptyTF}{ m m m }{
+  \IfNoValueTF{#1}{#2}{\tl_if_empty:nTF {#1} {#2} {#3}}
+}
+
+% Print latin words in italics
 
 % \begin{macro}{hairsp, etal, denovo, adhoc, etcetera, etc, ie, eg, vs, cf}
 %    \begin{macrocode}
