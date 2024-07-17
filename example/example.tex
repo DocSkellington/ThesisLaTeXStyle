@@ -1,28 +1,28 @@
 \documentclass[
-  b5paper,
+  a4paper,
   fontsize = 11pt,
   english,
   openany,
-  twoside=false,
+  twoside = false,
   roman equations,
 ]{thesis}
 
-\usepackage{babel}
+\usepackage[english]{babel}
 
 % This should yield a good looking document for b5paper
-\RenewDocumentCommand{\marginlayout}{}{
-  \newgeometry{
-    top=22.9mm,
-    bottom=22.9mm,
-    inner=13.3mm,
-    textwidth=100mm,
-    marginparsep=5mm,
-    marginparwidth=46mm,
-  }%
-  \recalchead%
-}
+% \RenewDocumentCommand{\marginlayout}{}{
+%   \newgeometry{
+%     top=22.9mm,
+%     bottom=22.9mm,
+%     inner=13.3mm,
+%     textwidth=100mm,
+%     marginparsep=5mm,
+%     marginparwidth=46mm,
+%   }%
+%   \recalchead%
+% }
 
-\usepackage{blindtext}
+\usepackage[math]{blindtext}
 
 \addbibresource{references.bib}
 
@@ -36,6 +36,8 @@
 
 \title{Example for the thesis class}
 \author{Gaëtan Staquet}
+
+\overfullrule=10pt
 
 \begin{document}
   \frontmatter
@@ -83,6 +85,13 @@
   If a float is big enough, it will go on a page on its own.
   Otherwise, text will come after it.
 
+  Do not put multiple captions in the same environment.
+
+  \begin{figure}
+    \includegraphics[width=.5\totalwidth,keepaspectratio]{example-image-a}
+    \caption{A small figure.}
+  \end{figure}
+
   \begin{figure}
     \includegraphics[width=\totalwidth]{example-image-a}
     \caption{A figure.}
@@ -115,9 +124,27 @@
     \caption{A listing (given as a figure).}
   \end{figure}
 
-  \part{Blind text}
+  \begin{table}
+    \begin{tabular}{l r}
+      \toprule
+      Left & Right
+      \\
+      \midrule
+      Value & Value
+      \\
+      \bottomrule
+    \end{tabular}
+    \caption{A \textsf{booktabs} table.}
+  \end{table}
 
-  \Blinddocument
+  \blindtext[10]
+  \marginnote[-5\baselineskip]{Test of a text that hopefully is long enough to require a linebreak}
+  \marginnote[\baselineskip]{\begin{tabular}{ll}\toprule VALUE & VALUE\\\bottomrule\end{tabular}}
+  \blindtext[10]
+
+  \begin{appendices}
+    \Blinddocument
+  \end{appendices}
 
   \backmatter
 
