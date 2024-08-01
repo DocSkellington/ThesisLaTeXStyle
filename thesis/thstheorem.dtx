@@ -182,6 +182,7 @@
   \newboxarray{#2}
   \begin{tcolorbox}[
     reset~and~store~to~box~array = {#2},
+    width = \headtextwidth,
     #1S,
     title = {\Cref*{#2}.},
   ]
@@ -189,10 +190,10 @@
   \end{tcolorbox}
 }
 \NewDocumentEnvironment{ths@restatable*}{ m m }{
-  \setlength{\linewidth}{\marginparwidth}
   \newboxarray{#2:margin}
   \begin{tcolorbox}[
     reset~and~store~to~box~array = {#2:margin},
+    width = \marginparwidth,
     #1MarginS,
     title = {\Cref*{#2}.},
   ]
@@ -251,9 +252,7 @@
   \end{ths@restatable*}
 }
 
-\NewDocumentCommand{\restate}{m}{
-  \useboxarray[#1]{1}
-}
+\NewDocumentCommand{\restate}{m}{\useboxarray[#1]{1}}
 
 % Changing the way equations are labeled to use roman numbers
 \if@thstheorem@roman
