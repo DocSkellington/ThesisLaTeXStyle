@@ -98,6 +98,11 @@
 
 \ExplSyntaxOn
 
+\newif\ifafourpaper
+\newif\ifbfivepaper
+\@ifclasswith{scrbook}{a4paper}{\afourpapertrue}{\afourpaperfalse}
+\@ifclasswith{scrbook}{b5paper}{\bfivepapertrue}{\bfivepaperfalse}
+
 \DeclareExpandableDocumentCommand{\IfNoValueOrEmptyTF}{ m m m }{
   \IfNoValueTF{#1}{#2}{\tl_if_empty:nTF {#1} {#2} {#3}}
 }

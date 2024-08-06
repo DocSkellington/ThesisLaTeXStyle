@@ -112,27 +112,51 @@
 % \begin{macro}{\marginlayout, \widelayout, \pagelayout}
 %    \begin{macrocode}
 \NewDocumentCommand{\marginlayout}{}{
-  \newgeometry{
-    top=27.4mm,
-    bottom=27.4mm,
-    inner=24.8mm,
-    textwidth=125mm,
-    marginparsep=5.8mm,
-    marginparwidth=46mm,
-  }%
+  \ifafourpaper
+    \newgeometry{
+      top=27.4mm,
+      bottom=27.4mm,
+      inner=24.8mm,
+      textwidth=125mm,
+      marginparsep=5.8mm,
+      marginparwidth=46mm,
+    }
+  \fi
+  \ifbfivepaper
+    \newgeometry{
+      top=22.9mm,
+      bottom=22.9mm,
+      inner=13.3mm,
+      textwidth=100mm,
+      marginparsep=5mm,
+      marginparwidth=46mm,
+    }
+  \fi
   \recalchead%
 }
 %    \end{macrocode}
 %    \begin{macrocode}
 \NewDocumentCommand{\widelayout}{}{
-  \newgeometry{
-    top=27.4mm,
-    bottom=27.4mm,
-    inner=24.8mm,
-    outer=24.8mm,
-    marginparsep=0mm,
-    marginparwidth=0mm,
-  }%
+  \ifafourpaper
+    \newgeometry{
+      top=27.4mm,
+      bottom=27.4mm,
+      inner=24.8mm,
+      outer=24.8mm,
+      marginparsep=0mm,
+      marginparwidth=0mm,
+    }
+  \fi
+  \ifbfivepaper
+    \newgeometry{
+      top=22.9mm,
+      bottom=22.9mm,
+      inner=13.3mm,
+      outer=13.3mm,
+      marginparsep=0mm,
+      marginparwidth=0mm,
+    }
+  \fi
   \recalchead%
 }
 %    \end{macrocode}
