@@ -8,7 +8,7 @@
   - Cleveref:
     - Display Appendix
     - Display `(ref)` for equations
-    - Commands can be used in section titles
+    - Commands can be used in section titles (no longer works after an update)
   - Index and glossaries
   - Command for TOC of chapter
   - Bibliography references setup
