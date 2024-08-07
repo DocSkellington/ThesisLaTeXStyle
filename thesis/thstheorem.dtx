@@ -24,24 +24,24 @@
 %
 %<package>\RequirePackage{tikz}
 %<package>\RequirePackage[skins, breakable, theorems, magazine]{tcolorbox}
-
+%
 \ExplSyntaxOn
-
+%
 \DeclareKeys[thstheorem]{
   roman~equations.if = @thstheorem@roman,
   roman~equations.usage = preamble
 }
 \ProcessKeyOptions
-
+%
 \colorlet{theoremBackground}{DarkGray!40!white}
 \colorlet{theoremFrame}{black}
-
+%
 \colorlet{definitionBackground}{DarkGray!20!white}
 \colorlet{definitionFrame}{DarkGray}
-
+%
 \colorlet{exampleBackground}{DarkGray!10!white}
 \colorlet{exampleFrame}{LightGray}
-
+%
 \tcbset{
   boxS/.style = {
     enhanced,
@@ -141,21 +141,21 @@
     exampleMarginS
   },
 }
-
+%
 \theoremstyle{plain}
 \newtheorem{theoremInner}{Theorem}[section]
 \newtheorem{lemmaInner}[theoremInner]{Lemma}
 \newtheorem{propositionInner}[theoremInner]{Proposition}
 \newtheorem{corollaryInner}[theoremInner]{Corollary}
-
+%
 \theoremstyle{definition}
 \newtheorem{definitionInner}[theoremInner]{Definition}
 \newtheorem{assumptionInner}[theoremInner]{Assumption}
-
+%
 \theoremstyle{remark}
 \newtheorem{exampleInner}[theoremInner]{Example}
 \newtheorem{remarkInner}[theoremInner]{Remark}
-
+%
 \crefname{theoremInner}{theorem}{theorems}
 \crefname{lemmaInner}{lemma}{lemmas}
 \crefname{propositionInner}{proposition}{propositions}
@@ -165,7 +165,7 @@
 \crefname{assumptionInner}{assumption}{assumptions}
 \crefname{exampleInner}{example}{examples}
 \crefname{remarkInner}{remark}{remarks}
-
+%
 \tcolorboxenvironment{theoremInner}{theoremS}
 \tcolorboxenvironment{lemmaInner}{lemmaS}
 \tcolorboxenvironment{propositionInner}{propositionS}
@@ -175,7 +175,7 @@
 \tcolorboxenvironment{exampleInner}{exampleS}
 \tcolorboxenvironment{remarkInner}{remarkS}
 \tcolorboxenvironment{proof}{proofS}
-
+%
 % {type} {label of original}
 % Description of the environment is not retrieved (e.g., Definition 3.2.1 [Description of the definition])
 \NewDocumentEnvironment{ths@restatable}{ m m }{
@@ -200,7 +200,7 @@
 }{
   \end{tcolorbox}
 }
-
+%
 % {type} {label} {description} {margin?} {body}
 \NewDocumentCommand{\ths@thm}{ m m m m +m }{
   \IfValueTF{#3}{
@@ -222,7 +222,7 @@
     \end{ths@restatable*}
   }
 }
-
+%
 % All environments require the label!
 \NewDocumentEnvironment{theorem}{ o m +b }{\ths@thm{theorem}{#2}{#1}{\BooleanFalse}{#3}}{}
 \NewDocumentEnvironment{theorem*}{ o m +b }{\ths@thm{theorem}{#2}{#1}{\BooleanTrue}{#3}}{}
@@ -240,9 +240,9 @@
 \NewDocumentEnvironment{remark*}{ o m +b }{\ths@thm{remark}{#2}{#1}{\BooleanTrue}{#3}}{}
 \NewDocumentEnvironment{example}{ o m +b }{\ths@thm{example}{#2}{#1}{\BooleanFalse}{#3}}{}
 \NewDocumentEnvironment{example*}{ o m +b }{\ths@thm{example}{#2}{#1}{\BooleanTrue}{#3}}{}
-
+%
 \renewcommand{\qedsymbol}{$\square$} % I don't know why but the square is removed by something
-
+%
 % {type} {label of original}
 \NewDocumentEnvironment{restatableMargin}{ m m }{
   % \setlength{\labelindent}{0em}
@@ -251,9 +251,9 @@
 }{
   \end{ths@restatable*}
 }
-
+%
 \NewDocumentCommand{\restate}{m}{\useboxarray[#1]{1}}
-
+%
 % Changing the way equations are labeled to use roman numbers
 \if@thstheorem@roman
   \renewcommand{\theequation}{\thesection.\roman{equation}}
@@ -261,8 +261,7 @@
 \else
   \counterwithin{equation}{section}
 \fi
-
-
+%
 % Restatable equations.
 % It creates a macro (that does not take any arguments) that outputs the same equation with the same numbering
 \NewDocumentCommand{\restatableMarginEquation}{ m m m }{
@@ -278,5 +277,5 @@
   }
 }
 \ExplSyntaxOff
-
+%
 \endinput

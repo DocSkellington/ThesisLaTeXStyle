@@ -86,74 +86,490 @@
 % \begin{documentation}
 %
 % \begin{abstract}
+% This \LaTeX class is meant to be used to typeset a PhD thesis (or a similar
+% document) containing various definitions, theorems, and equations.
+% Margins are made wider than usual to allow the writer to restate definitions,
+% theorems, and equations within them, in order to help the reader.
+%
+% This class is heavily inspired by the \cls{kaobook} class.
 % \end{abstract}
 %
 % \tableofcontents
 %
-% TODO
+% \section{Introduction}
+%
+% This \LaTeX class is meant to be used to typeset a PhD thesis (or a similar
+% long document) containing various mathematical environments, such as definitions,
+% theorems, and equations.
+% In order to ease the reading of the document, margins are made wider than usual
+% in order to allow restating those mathematical environments.
+% Moreover, instead of footnotes, we recommend using \emph{sidenotes} (that have
+% the same behavior but are written in the margin).
+%
+% A short example can be found on the GitHub repository.\footnote{\url{https://github.com/DocSkellington/ThesisLaTeXStyle}}
+% A full example of a document produced with this class is my own PhD
+% thesis.\footnote{\url{https://www.gaetanstaquet.com/academic/thesis.pdf}}
+%
+% For now, the class fully supports A4 and B5 paper formats.
+% However, it should be sufficient to re-define the commands \cs{marginlayout}
+% and \cs{widelayout} (see \Cref{layout}) to have a functional layout for new
+% paper formats.
+%
+% \section{Class options}
+%
+% On top of the usual options for \LaTeX classes
+% (such as \verb!a4paper!, \verb!b5paper!, \verb!openany!, and \verb!twoside!),
+% the class provides a new option:
+% \DescribeOption{roman equations}
+% \texttt{roman equations}.
+% If it is set, equations are numbered using roman numbers.
+% This helps to visually differentiate equations from definitions, theorems, \emph{etc}.
+%
+% We highlight that the class is a derivative of \verb!scrbook!.
+% That is, it defaults to a two side document where parts and chapters start on
+% an odd page.
+%
+% \section{Layout}\label{layout}
+%
+% The main objective of this class is to alter the layout to increase the available
+% margin space.
+% How much space to reserve is dictated by the following commands.
+%
+% \begin{function}{\marginlayout, \widelayout}
+%   The macro
+%   \cs{marginlayout} dictates the layout of pages in \enquote{margin mode}
+%   (which is the main mode of the class), while \cs{widelayout} gives the layout
+%   for the main matter, part pages, and back matter (bibliography, index, and so on).
+%   We refer to the documentation of \pkg{geometry} for the commands defining the
+%   layout.
+%   In order to have correct header and footer, the command \cs{recalchead} must
+%   be called at the end of the macro.
+% \end{function}
+% The default implementation of both macros (which offer good-looking pages
+% for A4 and B5 paper formats) are:
+%   \begin{verbatim}
+% \NewDocumentCommand{\marginlayout}{}{
+%  \ifafourpaper
+%    \newgeometry{
+%      top=27.4mm,
+%      bottom=27.4mm,
+%      inner=24.8mm,
+%      textwidth=125mm,
+%      marginparsep=5.8mm,
+%      marginparwidth=46mm,
+%    }
+%  \fi
+%  \ifbfivepaper
+%    \newgeometry{
+%      top=22.9mm,
+%      bottom=22.9mm,
+%      inner=13.3mm,
+%      textwidth=100mm,
+%      marginparsep=5mm,
+%      marginparwidth=46mm,
+%    }
+%  \fi
+%  \recalchead
+% }
+% \NewDocumentCommand{\widelayout}{}{
+%  \ifafourpaper
+%    \newgeometry{
+%      top=27.4mm,
+%      bottom=27.4mm,
+%      inner=24.8mm,
+%      outer=24.8mm,
+%      marginparsep=0mm,
+%      marginparwidth=0mm,
+%    }
+%  \fi
+%  \ifbfivepaper
+%    \newgeometry{
+%      top=22.9mm,
+%      bottom=22.9mm,
+%      inner=13.3mm,
+%      outer=13.3mm,
+%      marginparsep=0mm,
+%      marginparwidth=0mm,
+%    }
+%  \fi
+%  \recalchead
+% }
+% \end{verbatim}
+%
+% \begin{function}{\pagelayout}
+%   \begin{syntax}
+%     \cs{pagelayout} \marg{layout}
+%   \end{syntax}
+%   Changes the used page layout.
+%   The value of \meta{layout} must be either \texttt{margin} or \texttt{wide}.
+% \end{function}
+%
+% \subsection{Writing in the margins}
+%
+% The class offers two main macros to write inside the margins.
+%
+% \begin{function}{\marginnote, \sidenote}
+%   \begin{syntax}
+%     \cs{marginnote} \oarg{shift} \marg{contents}
+%     \cs{sidenote} \oarg{mark} \oarg{shift} \marg{contents}
+%   \end{syntax}
+%   The \cs{marginnote} macro writes \meta{contents} in the margin of the page,
+%   while \cs{sidenote} does the same but adds a mark at the position of the macro
+%   and the same mark before the contents in the margin (akin to \cs{footnote}).
+%
+%   If \meta{shift} is absent, the contents will act as a float that aims to
+%   vertically align with the macro call.
+%   If it is not empty, it must be a length that dictates by how much space
+%   the contents must shift \emph{vertically}.
+%   It is recommended to use a multiple of \cs{baselineskip}.
+%
+%   For \cs{sidenote}, if \oarg{mark} is absent or empty, the mark comes from
+%   the \texttt{sidenote} counter.
+%   If it is not empty, the value is used as the mark.
+% \end{function}
+%
+% \subsection{Floating environments}
+%
+% The default placement for floating figures, tables, and algorithms is \texttt{t}
+% (that is, the top of a page).
+% You can override this for a specific environment as usual.
+% If you want to change this behavior (or add a default placement for other floats),
+% use the \cs{floatplacement} macro (from the \pkg{float} package).
+% For instance, \verb!\floatplacement{figure}{b}! changes the default placement
+% of figures to the bottom of a page.
+%
+% \subsection{Algorithms}
+%
+% The class includes a hack (from \url{https://tex.stackexchange.com/a/147751})
+% to add vertical lines inside algorithms typesetted using \pkg{algpseudocode}.
+% It is very important to ensure that every line of the algorithm consumes a single
+% line in the PDF.
+% Otherwise, the vertical lines will go over the spilling text.
+%
+% \section{Bibliography}
+%
+% While the usual citation macros (from \pkg{biblatex}) still work, we recommend
+% using the following macro to print a short citation in the margin.
+%
+% \begin{function}{\sidecite, \formatmargincitation}
+%   \begin{syntax}
+%     \cs{sidecite} \oarg{shift} \oarg{note} \oarg{postnote} \marg{key}
+%     \cs{formatmargincitation} \marg{key}
+%   \end{syntax}
+%   The \cs{sidecite} macro acts as a \pkg{biblatex}-like command that also prints
+%   a short version of the citation corresponding to \meta{key} in the margin.
+%   The \meta{shift} argument is a length giving the \emph{vertical} shift of
+%   the text in the margin (see \cs{marginnote} and \cs{sidenote}).
+%   The \meta{note} and \meta{postnote} arguments behave as for \pkg{biblatex}
+%   commands: if only \meta{note} is given, it acts as a postnote; if both are
+%   given, \meta{note} is a prenote, while \meta{postnote} is the postnote.
+%
+%   The \cs{formatmargincitation} macro is automatically called by \cs{sidecite}
+%   and produces the text to write in the margin.
+%   Its default implementation is
+%   \begin{verbatim}
+%\NewDocumentCommand{\formatmargincitation}{m}
+%{\parencite{#1}: \citeauthor*{#1} (\citeyear{#1}), \citetitle{#1}}
+%   \end{verbatim}
+% \end{function}
+%
+% The \cls{thesis} class supresses the following fields in the bibliography:
+% \texttt{archivePrefix}, \texttt{arxivId}, \texttt{pmid}, \texttt{eprint}, and
+% if the type of the reference is a book, \texttt{doi}, via:
+% \begin{verbatim}
+% \AtEveryBibitem{
+%   \clearfield{archivePrefix}
+%   \clearfield{arxivId}
+%   \clearfield{pmid}
+%   \clearfield{eprint}
+%   \ifentrytype{book}{\clearfield{doi}}{}
+% }
+% \end{verbatim}
+%
+% \section{Mathematical environments}
+%
+% The class defines environments for theorems, lemmas, propositions, corollaries,
+% definitions, assumptions, examples, and remarks.
+% We here describe them by focusing on theorems.
+%
+% \DescribeEnv{theorem}
+% The \env{theorem} environment has one optional argument, which is the
+% eemph{description} of the theorem (akin to the optional argument for \cls{amsthm}
+% environment), and one mandatory argument, which is the label
+% (without the call to \cs{label}) of the theorem.
+% That is, its syntax is
+% \begin{verbatim}
+%   \begin{theorem}[Description]{thm:part:chapter:name}
+%   Statement
+%   \end{theorem}
+% \end{verbatim}
+% This produces a \pkg{tcolorbox} box, which is also saved (to be able to restate
+% the box later), using the label as the name of the saved box for the following
+% command.
+%
+% \begin{function}{\restate}
+%   \begin{syntax}
+%     \cs{restate} \marg{label}
+%   \end{syntax}
+%   Restate the box produced by a previous \env{theorem} environment with the
+%   same label.
+% \end{function}
+%
+% \DescribeEnv{theorem*}
+% The class also provides starred versions of the environments, with the same
+% arguments as the unstarred one.
+% On top of the already mentioned saved box, another box whose width matches the
+% size of the margin is saved, using exactly the same statement.
+% The name of that smaller box is \meta{label}\texttt{:margin}.
+% See \Cref{misc:conditions} for a macro to provide different texts for the margin
+% and the main part of a page.
+% \DescribeEnv{restatableMargin}
+% Finally, the \env{restatableMargin} can be used
+% if the statement has to drastically change for the margin.
+% Its syntax is as follows:
+% \begin{verbatim}
+%   \begin{restatableMargin}{theorem}{label}
+%     Statement for margin.
+%   \end{restatableMargin}
+% \end{verbatim}
+% That is, the type of the original box must be provided (here, theorem) and its
+% label.
+% Again, the name of the produced box that can fit within the margin is
+% \meta{label}\texttt{:margin}.
+%
+% \DescribeEnv{proof}
+% Finally, the \env{proof} environment is also provided.
+% It is used exactly as the classical \LaTeX environment (that is, without a
+% single optional argument).
+%
+% \subsection{Changing the style}
+%
+% The class defines the following colors for the boxes:
+% \begin{variable}{theoremBackground, theoremFrame}
+%   \texttt{theoremBackground} and \texttt{theoremFrame} that give the background
+%   and the frame colors for the \env{theorem}, \env{lemma}, \env{proposition},
+%   and \env{corollary} environments.
+% \end{variable}
+% \begin{variable}{definitionBackground, definitionFrame}
+%   \texttt{definitionBackground} and \texttt{definitionFrame}
+%   that give the background and the frame colors for the
+%   \env{definition} and \env{assumption} environments.
+% \end{variable}
+% \begin{variable}{exampleBackground, exampleFrame}
+%   \texttt{exampleBackground} and \texttt{exampleFrame}
+%   that give the background and the frame colors for the
+%   \env{example} and \env{remark} environments.
+% \end{variable}
+% Simply redefinying these colors (via \cs{colorlet}, for instance) is enough.
+%
+% The default styles for the \pkg{tcolorbox} boxes in the body of a page
+% are defined as follows:
+% \begin{verbatim}
+% \tcbset{
+%   boxS/.style = {
+%     enhanced, breakable = true,
+%     left = 2pt, right = 2pt, top = 3pt, bottom = 3pt,
+%     before skip balanced = 0.5\baselineskip plus 5pt,
+%     after skip balanced = 0.5\baselineskip plus 5pt,
+%   },
+%   theoremS/.style = {
+%     boxS, theorem style = plain,
+%     arc = 0pt, boxrule = 0pt, leftrule = 1pt, colframe = theoremFrame,
+%     fonttitle = \normalfont\bfseries, description font = \normalfont,
+%     coltitle = black, fontupper = \itshape,
+%     colback = theoremBackground,
+%   },
+%   lemmaS/.style = { theoremS, },
+%   propositionS/.style = { theoremS, },
+%   corollaryS/.style = { theoremS, },
+%   definitionS/.style = {
+%     theoremS,
+%     colframe = definitionFrame, colback = definitionBackground,
+%     fontupper = \normalfont,
+%   },
+%   assumptionS/.style = { definitionS, },
+%   exampleS/.style = {
+%     theoremS,
+%     fonttitle = \normalfont\itshape, fontupper = \normalfont,
+%     colframe = exampleFrame, colback = exampleBackground,
+%   },
+%   remarkS/.style = { exampleS },
+% }
+% \end{verbatim}
+% The default styles for the boxes in the margin are:
+% \begin{verbatim}
+% \tcbset{
+%   theoremMarginS/.style = {
+%     theoremS,
+%     fonttitle = \normalfont\small\bfseries, fontupper = {\small},
+%   },
+%   lemmaMarginS/.style = { theoremMarginS, },
+%   propositionMarginS/.style = { theoremMarginS, },
+%   corollaryMarginS/.style = { theoremMarginS, },
+%   definitionMarginS/.style = {
+%     theoremMarginS,
+%     colframe = definitionFrame, colback = definitionBackground,
+%   },
+%   assumptionMarginS/.style = { definitionMarginS, },
+%   exampleMarginS/.style = {
+%     theoremMarginS,
+%     fonttitle = \normalfont\small\itshape,
+%     colframe = exampleFrame, colback = exampleBackground,
+%   },
+%   remarkMarginS/.style = { exampleMarginS, },
+% }
+% \end{verbatim}
+% Finally, the style for the \env{proof} environment:
+% \begin{verbatim}
+% \tcbset{
+%   proofS/.style = {
+%     boxS,
+%     colback=white, arc=0pt, boxrule=0pt, borderline={0.3pt}{-0.25pt}{dotted},
+%   }
+% }
+% \end{verbatim}
+% Simply redefine one of those styles, if needed.
+%
+% \subsection{Restating an equation}
+%
+% \begin{function}{\restatableMarginEquation}
+%   \begin{syntax}
+%     \cs{restatableMarginEquation} \marg{name} \marg{equation} \marg{label}
+%   \end{syntax}
+%   Creates a macro \cs{name} that outputs \meta{equation} (using a linewidth
+%   that fits in the margin) and whose tag is given by \meta{label}.
+%   When \cs{name} is invoked, there must have been an earlier numbered equation
+%   labeled with \meta{label} (otherwise, \LaTeX will produce an error).
+% \end{function}
+%
+% \section{Miscellaneous}
+%
+% Finally, we give various little tools and customizations made by the class.
+%
+% \begin{function}{\etal, \etc, \ie, \eg, \cf}
+%   The \cs{etal}, \cs{etc}, \cs{ie}, \cs{eg}, and \cs{cf} macros produce
+%   italized texts for \emph{et al.}, \emph{etc.}, \emph{i.e.}, \emph{e.g.}, and
+%   \emph{cf.}
+% \end{function}
+%
+% \begin{variable}{LinkColor, CiteColor}
+%   The colors \texttt{LinkColor} and \texttt{CiteColor} are used to color the
+%   text for links (cross-references and URL) and for citations, respectively.
+% \end{variable}
+%
+% \subsection{Chapters}
+%
+% If a chapter with label \meta{chapter} is written inside a
+% \env{appendices} environment, \cs{Cref}\meta{chapter} prints
+% \enquote{Appendix~\cs{ref}\meta{chapter}}.
+%
+% \begin{function}{\chapterTOC}
+%   The \cs{chapterTOC} macro outputs the table of contents of the current chapter.
+% \end{function}
+%
+% \subsection{Glossaries and index}
+%
+% A new style to be used in glossaries produced with the \pkg{glossaries}
+% and \pkg{glossaries-extra} packages is provided:
+% \texttt{long-symbol}, which can be used to display a (mathematical) symbol
+% alongside its description.
+% For instance,
+% \begin{verbatim}
+% \printglossary[
+%    type=notations,
+%    style=long-symbol,
+%    nonumberlist,
+%  ]
+% \end{verbatim}
+%
+% \subsection{Conditional macros}\label{misc:conditions}
+%
+% \begin{function}{\ifafourpaper, \ifbfivepaper}
+%   The \cs{ifafourpaper} and \cs{ifbfivepaper} commands can be used to change
+%   the contents of the document, depending on the paper format.
+%   Do not forget to use \cs{fi} to close the block.
+% \end{function}
+%
+% \begin{function}{\ifInMargin}
+%   \begin{syntax}
+%     \cs{ifInMargin} \marg{inMargin} \marg{inBody}
+%   \end{syntax}
+%   If the text is written in the margin, \meta{inMargin} is used; otherwise,
+%   \marg{inBody} is.
+% \end{function}
+%
+% \section{Known issues}
+%
+% Vertical lines in algorithms go over the text, if a line is too long and
+% overspills on the next line.
+%
+% \LaTeX produces overfull warnings when a line is incomplete and finishes by
+% a forced linebreak.
+% For instance, it is the case for every restated definition/theorem/\emph{etc}.
+% in the body of the text (not the margin), or when the line is followed by
+% an itemize-like environment.
 %
 % \end{documentation}
 %
 % \begin{implementation}
-
+%
 \ExplSyntaxOn
-
+%
 \newif\ifafourpaper
 \newif\ifbfivepaper
 \@ifclasswith{scrbook}{a4paper}{\afourpapertrue}{\afourpaperfalse}
 \@ifclasswith{scrbook}{b5paper}{\bfivepapertrue}{\bfivepaperfalse}
-
+%
+% \begin{macro}{\IfNoValueOrEmptyTF}
+%    \begin{macrocode}
 \DeclareExpandableDocumentCommand{\IfNoValueOrEmptyTF}{ m m m }{
   \IfNoValueTF{#1}{#2}{\tl_if_empty:nTF {#1} {#2} {#3}}
 }
-
+%    \end{macrocode}
+% \end{macro}
+%
 % Print latin words in italics
-
-% \begin{macro}{hairsp, etal, denovo, adhoc, etcetera, etc, ie, eg, vs, cf}
+% \begin{macro}{\hairsp, \etal, \etc, \ie, \eg, \cf}
 %    \begin{macrocode}
 \NewDocumentCommand{\hairsp}{}{\hspace{1pt}}
 \NewDocumentCommand{\etal}{}{\textit{et~al.}\xspace}
-\NewDocumentCommand{\denovo}{}{\textit{de~novo}\xspace}
-\NewDocumentCommand{\adhoc}{}{\textit{ad~hoc}\xspace}
-\NewDocumentCommand{\etcetera}{}{\textit{et~cetera}\xspace}
 \NewDocumentCommand{\etc}{}{\textit{etc.}\xspace}
 \NewDocumentCommand{\ie}{}{\textit{i.\nobreak\hairsp{}e.}\xspace}
 \NewDocumentCommand{\eg}{}{\textit{e.\nobreak\hairsp{}g.}\xspace}
-\NewDocumentCommand{\vs}{}{\textit{vs}\xspace}
 \NewDocumentCommand{\cf}{}{\textit{cf.}\xspace}
 %    \end{macrocode}
 % \end{macro}
-
+%
 \RequirePackage{appendix}
 % To force cleveref to display appendix instead of chapter
 \AtBeginEnvironment{appendices}{\crefalias{chapter}{appendix}}
-
+%
 % Allow use of \Cref/\cref in section titles
 \usepackage[final]{crossreftools}
 \pdfstringdefDisableCommands{
   \let\Cref\crtCref
   \let\cref\crtcref
 }
-
+%
 % Only prints (ref) when using \cref{eq:label}.
 \crefname{equation}{}{}
 \Crefname{equation}{}{}
-
+%
 %------
 % Fonts
 %------
-
+%
 \addtokomafont{part}{\normalfont\scshape\bfseries}
 \addtokomafont{partentry}{\normalfont\scshape\bfseries}
 \addtokomafont{chapter}{\normalfont\bfseries}
 \addtokomafont{chapterentry}{\normalfont\bfseries}
-
+%
 \addtokomafont{section}{\normalfont\bfseries}
 \addtokomafont{subsection}{\normalfont\bfseries}
 \addtokomafont{subsubsection}{\normalfont\bfseries}
 \addtokomafont{paragraph}{\normalfont\bfseries}
 \setkomafont{descriptionlabel}{\normalfont\bfseries}
-
+%
 \RequirePackage[force]{filehook}
 \setromanfont[Scale=1.04]{Libertinus Serif}
 \setsansfont[Scale=1]{Libertinus Sans}
@@ -166,7 +582,7 @@
   \RenewDocumentCommand{\Coloneqq}{}{::=}
   \setmathfont{STIX}[range=\models]
 }
-
+%
 % Tighten up space between displays (\eg, equations) and make symmetric (from tufte-latex)
 \setlength\abovedisplayskip{6pt plus 2pt minus 4pt}
 \setlength\belowdisplayskip{6pt plus 2pt minus 4pt}
@@ -174,9 +590,9 @@
 \abovedisplayshortskip \z@ \@plus3\p@
 \belowdisplayskip \abovedisplayskip
 \belowdisplayshortskip 6\p@ \@plus3\p@ \@minus3\p@
-
+%
 \ExplSyntaxOff
-
+%
 \newglossarystyle{long-symbol}{%
   \setglossarystyle{longheader}%
   \setlength{\glsdescwidth}{.8\hsize}
@@ -187,9 +603,9 @@
     \tabularnewline
   }
 }
-
+%
 \ExplSyntaxOn
-
+%
 \colorlet{LinkColor}{DarkOrange!70!black}
 \colorlet{CiteColor}{DarkOrange!70!black}
 \hypersetup{
@@ -203,13 +619,15 @@
   linkcolor = LinkColor,
   urlcolor = LinkColor,
 }
-
+%
 % --------
 % Table of contents
 % --------
-
+%
 \renewcommand*{\@pnumwidth}{2em}
-
+%
+% \begin{macro}{\chapterTOC}
+%    \begin{macrocode}
 \NewDocumentCommand{\chapterTOC}{}{
   \begingroup
     \etocarticlestyle
@@ -218,9 +636,11 @@
     \localtableofcontents
   \endgroup
 }
-
+%    \end{macrocode}
+% \end{macro}
+%
 \ExplSyntaxOff
-
+%
 % \end{implementation}
-
+%
 \endinput

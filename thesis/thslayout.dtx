@@ -29,35 +29,37 @@
 %<package>\RequirePackage{enumitem}
 %
 %<package>\RequirePackage{scrlayer-scrpage}
-
+%
 \ExplSyntaxOn
-
+%
 \apptocmd{\frontmatter}{
   \bookmarksetup{startatroot}
   \pagestyle{plain.scrheadings}
   \pagelayout{wide}
   \chapterstyle{plain}
 }{}{\msg_warning:nn{thesis}{frontmatter}}
-
+%
 \apptocmd{\mainmatter}{
   \bookmarksetup{startatroot}
   \pagestyle{scrheadings}
   \pagelayout{margin}
   \chapterstyle{vertical line}
 }{}{\msg_warning:nn{thesis}{mainmatter}}
-
+%
 \apptocmd{\backmatter}{
   \bookmarksetup{startatroot}
   \pagestyle{plain.scrheadings}
   \pagelayout{wide}
   \chapterstyle{plain}
 }{}{\msg_warning:nn{thesis}{backmatter}}
-
+%
 \AtBeginDocument{
   \chapterstyle{plain}
   \pagelayout{wide}
 }
-
+%
+% \begin{macro}{\ifInMargin}
+%    \begin{macrocode}
 \NewDocumentCommand{\ifInMargin}{m m}{
   \ifdim \columnwidth<\marginparwidth
     {#1}
@@ -69,28 +71,30 @@
     \fi
   \fi
 }
-
+%    \end{macrocode}
+% \end{macro}
+%
 % --------------------
 % Error messages
 % --------------------
-
+%
 \msg_new:nnn{thesis}{pagelayout}{Unknown~page~layout.~Received~#1~but~only~wide~and~margin~are~defined.}
 \msg_new:nnn{thesis}{chapterstyle}{Unknown~chapter~style.~Received~#1~but~only~plain~and~vertical~line~are~defined.}
 \msg_new:nnn{thesis}{frontmatter}{Patching~\frontmatter~failed.}
 \msg_new:nnn{thesis}{mainmatter}{Patching~\mainmatter~failed.}
 \msg_new:nnn{thesis}{backmatter}{Patching~\backmatter~failed.}
-
+%
 % --------------------
 % Lengths of texts
 % --------------------
-
+%
 \newlength{\headtextwidth}
 \newlength{\headmarginparsep}
 \newlength{\headmarginparwidth}
 \newlength{\headtotal}
 \newlength{\totalwidth}
-
-% \begin{macro}{recalchead}
+%
+% \begin{macro}{\recalchead}
 %    \begin{macrocode}
 \NewDocumentCommand{\recalchead}{}{
   \setlength{\headtextwidth}{\textwidth}
@@ -102,13 +106,13 @@
 }
 %    \end{macrocode}
 % \end{macro}
-
+%
 \AtBeginDocument{\recalchead}
-
+%
 % --------------------
 % Margin layout
 % --------------------
-
+%
 % \begin{macro}{\marginlayout, \widelayout, \pagelayout}
 %    \begin{macrocode}
 \NewDocumentCommand{\marginlayout}{}{
@@ -174,11 +178,11 @@
 }
 %    \end{macrocode}
 % \end{macro}
-
+%
 % --------------------
 % Page style (copied from kaobook)
 % --------------------
-
+%
 % Main page style.
 % Displays the chapter number, chapter name, a vertical line, and the page number
 \renewpagestyle{scrheadings}{
@@ -226,7 +230,7 @@
   {}
   {}
 }
-
+%
 % Plain page style
 \renewpagestyle{plain.scrheadings}{
   {}
@@ -237,18 +241,20 @@
   {}
   {}
 }
-
+%
 \let\oldpart\part
 \renewcommand{\part}[1]{%
   \pagelayout{wide}
   \oldpart{#1}
   \pagelayout{margin}
 }
-
+%
 % --------------------
 % Chapter style (copied from kaobook)
 % --------------------
-
+%
+% \begin{macro}{\chapterstyleplain, \chapterstyleverticalline, \chapterstyle}
+%    \begin{macrocode}
 \DeclareDocumentCommand{\chapterstyleplain}{}{
   \renewcommand{\chapterlinesformat}[3]{\@hangfrom{##2}{##3}}
   \renewcommand*{\chapterformat}{
@@ -258,7 +264,8 @@
   }
   \RedeclareSectionCommand[beforeskip=0cm,afterskip=10mm]{chapter}
 }
-
+%    \end{macrocode}
+%    \begin{macrocode}
 \DeclareDocumentCommand{\chapterstyleverticalline}{}{
   \renewcommand*{\chapterformat}{
     \mbox{
@@ -309,7 +316,8 @@
   }
   \RedeclareSectionCommand[beforeskip=0cm,afterskip=10mm]{chapter}
 }
-
+%    \end{macrocode}
+%    \begin{macrocode}
 \DeclareDocumentCommand{\chapterstyle}{m}{
   \ifthenelse{\equal{#1}{plain}}{
     \chapterstyleplain
@@ -321,52 +329,54 @@
     }
   }
 }
-
+%    \end{macrocode}
+% \end{macro}
+%
 % --------------------
 % List style
 % --------------------
-
+%
 \RequirePackage[dvipsnames,svgnames,table]{xcolor}
-
+%
 \definecolor[named]{itemColor}{rgb}{0.31,0.31,0.33}
-
+%
 \renewcommand{\labelitemi}{\scriptsize\color{itemColor}$\blacktriangleright$}
 \renewcommand{\labelitemii}{\textbullet}
-
+%
 \setlist[itemize]{noitemsep}
 \setlist[enumerate]{noitemsep}
 \setlist[description]{
   noitemsep,
   font={\bfseries\sffamily\small\color{itemColor}},
 }
-
+%
 % --------------------
 % Paragraph formatting
 % --------------------
-
+%
 \RequirePackage{ragged2e}
 \RequirePackage{setspace}
 \RequirePackage{hyphenat}
 \RequirePackage{microtype}
 \RequirePackage{needspace}
 \RequirePackage{xspace}
-
+%
 \NewDocumentCommand{\@body@par}{}{
   \justifying
   \singlespacing
   \normalfont
   \normalsize
 }
-
+%
 \NewDocumentCommand{\@margin@par}{}{
   \justifying
   \normalfont
   \footnotesize
   \setlength{\parindent}{0em}
 }
-
+%
 \@body@par
-
+%
 % --------------------
 % Margin notes (copied from kaobook)
 % --------------------
@@ -374,7 +384,7 @@
 \RequirePackage{marginfix}
 \RequirePackage{sidenotes}
 \RequirePackage{chngcntr}
-
+%
 \counterwithin*{sidenote}{chapter}
 %
 \renewcommand*{\raggedleftmarginnote}{}
@@ -383,7 +393,7 @@
 \renewcommand{\marginnotevadjust}{0.8mm}
 \marginposadjustment=0.1mm
 \marginheightadjustment=.5cm
-
+%
 \def\kao@if@nblskip#1{
   \expandafter\ifx\@car#1\@nil*
     \expandafter\@firstoftwo
@@ -391,11 +401,11 @@
     \expandafter\@secondoftwo
   \fi
 }
-
+%
 \newif\ifinfloat
 \AtBeginEnvironment{tcolorbox}{\infloattrue}
 \AtBeginEnvironment{minipage}{\infloattrue}
-
+%
 \def\IfInFloatingEnvir{
   \ifinfloat
     \expandafter\@firstoftwo
@@ -403,7 +413,7 @@
     \expandafter\@secondoftwo
   \fi
 }
-
+%
 \let\oldmarginnote\marginnote
 \RenewDocumentCommand{\marginnote}{ o m }{
   \IfNoValueOrEmptyTF{#1}{
@@ -416,7 +426,7 @@
     \oldmarginnote{#2}[\kao@if@nblskip{#1}{\@cdr#1\@nil\baselineskip}{#1}]
   }
 }
-
+%
 \setcounter{sidenote}{0}
 \RenewDocumentCommand\sidenote{ o o +m }{
   \IfNoValueOrEmptyTF{#1}{
@@ -427,7 +437,7 @@
   \sidenotetext[#1][#2]{#3}
   \@sidenotes@multimarker
 }
-
+%
 \RenewDocumentCommand\@sidenotes@thesidenotemark{ m }{
   \leavevmode
   \ifhmode
@@ -440,7 +450,7 @@
   \fi
   \relax
 }
-
+%
 % number, offset, text
 \RenewDocumentCommand{\sidenotetext}{ o o +m }{
   \IfNoValueOrEmptyTF{#1}{
@@ -449,7 +459,7 @@
     \marginnote[#2]{#1 : \enskip#3}
   }
 }
-
+%
 % Environment to hold a margin figure (from the sidenotes package)
 % We redefine it here to force \marginnote instead of \marginpar
 % This permits the use of marginfigure within example (or other environments)
@@ -462,7 +472,7 @@
   \end{lrbox}%
   \marginnote[#1]{\usebox{\@sidenotes@marginfigurebox}}
 }
-
+%
 % ---------
 % Floats
 % ---------
@@ -508,14 +518,14 @@
 \floatplacement{figure}{t}
 \floatplacement{table}{t}
 \floatplacement{algorithm}{t}
-
+%
 \renewcommand{\topfraction}{.9}
 \renewcommand{\textfraction}{0.07}
 \renewcommand{\floatpagefraction}{0.7}
-
+%
 \captionsetup[algorithm]{labelsep=colon}
 \addtokomafont{captionlabel}{\bfseries}
-
+%
 \ExplSyntaxOff
 \renewcommand*{\figureformat}{\figurename~\thefigure}
 \renewcommand*{\tableformat}{\tablename~\thetable}
@@ -551,12 +561,9 @@
 \apptocmd{\ALG@beginblock}{\ALG@tikzmark@start}{}{\errmessage{failed to patch}}
 \pretocmd{\ALG@endblock}{\ALG@tikzmark@end}{}{\errmessage{failed to patch}}
 % end vertical rule patch for algorithmicx
-\ExplSyntaxOn
-
+%
 % References to algorithms lines point to the correct algorithm
 % https://tex.stackexchange.com/a/156404
 \providecommand\theHALG@line{\thealgorithm.\arabic{ALG@line}}
-
-\ExplSyntaxOff
-
+%
 \endinput
