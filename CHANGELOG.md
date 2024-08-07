@@ -1,4 +1,4 @@
-# v1.0 (dev)
+# v1.0
 
   - Page layout: wide and margin
   - Chapter style: plain and vertical line

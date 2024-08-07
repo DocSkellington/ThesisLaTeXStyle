@@ -12,6 +12,20 @@ example: build
 		example/
 	$(MAKE) -C example
 
+release: doc example
+	zip -j thesis.zip \
+		thesis/thesis.cls \
+		thesis/thsbiblio.sty \
+		thesis/thstheorem.sty \
+		thesis/thslayout.sty \
+		thesis/thesis.pdf \
+		example/example.tex \
+		example/example.pdf \
+		README.md \
+		LICENSE \
+		CHANGELOG.md \
+		MANIFEST.md
+
 clean:
 	$(MAKE) -C thesis clean
 	$(MAKE) -C example clean
