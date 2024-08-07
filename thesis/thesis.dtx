@@ -20,7 +20,7 @@
 \ProvidesFile{\jobname.dtx}
 %</driver>
 %<class>\NeedsTeXFormat{LaTeX2e}[2022-06-01]
-%<class>\ProvidesExplClass{thesis}{2024/07/15}{v1.0}{PhD thesis document class}
+%<class>\ProvidesExplClass{thesis}{2024/08/07}{v1.0}{PhD thesis document class}
 %
 %<class>\RequirePackage{iftex}
 %<class>\RequireLuaTeX
@@ -440,6 +440,9 @@
 %   that fits in the margin) and whose tag is given by \meta{label}.
 %   When \cs{name} is invoked, there must have been an earlier numbered equation
 %   labeled with \meta{label} (otherwise, \LaTeX will produce an error).
+%
+%   The \meta{equation} is typesetted inside a \env{split} environment.
+%   That is, line breaks can be used, as well as \& to align the text.
 % \end{function}
 %
 % \section{Miscellaneous}
