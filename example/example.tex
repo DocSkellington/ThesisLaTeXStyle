@@ -1,26 +1,14 @@
 \documentclass[
-  a4paper,
+  % a4paper,
+  % openany,
+  % twoside = false,
+  b5paper,
   fontsize = 11pt,
   english,
-  openany,
-  twoside = false,
   roman equations,
 ]{thesis}
 
 \usepackage[english]{babel}
-
-% This should yield a good looking document for b5paper
-% \RenewDocumentCommand{\marginlayout}{}{
-%   \newgeometry{
-%     top=22.9mm,
-%     bottom=22.9mm,
-%     inner=13.3mm,
-%     textwidth=100mm,
-%     marginparsep=5mm,
-%     marginparwidth=46mm,
-%   }%
-%   \recalchead%
-% }
 
 \usepackage[math]{blindtext}
 
@@ -30,14 +18,13 @@
 \newglossary*{notations}{Notations}
 \loadglsentries[notations]{notations.tex}
 
-\makeindex[intoc]
+\makeindex
 \makeglossaries
 \glsdisablehyper
 
 \title{Example for the thesis class}
 \author{Gaëtan Staquet}
 
-\overfullrule=10pt
 
 \begin{document}
   \frontmatter
@@ -47,45 +34,105 @@
 
   \mainmatter
 
-  \chapter{Mathematical tools}
+  \chapter{Layout and mathematical tools}
+
+  The PDF output of this example is meant to be read alongside the tex file.
 
   \chapterTOC
 
-  \section{Theorems}
+  \section{In the margin}
 
-  \begin{definition*}{def:box}
-    This is a definition.\index{definition}
+  Use the command \verb!\marginnote! to write a note in the margin.\marginnote{This is an example of a margin note.}
+  The \verb!sidenote! command works similarly but also adds a mark.\sidenote{This is a sidenote.}
+  It is possible to change the mark.\sidenote[\dagger]{Like this, with a \dagger.}
+  Note that it is possible to vertically shift a note and to add a picture.
+  \marginnote[-11\baselineskip]{\includegraphics[width=\linewidth,keepaspectratio]{example-image-a}}%
+  For instance, the A picture in the margin has been shifted upwards by eleven \verb!\baselineskip!.
+  A sidenote can also be vertically shifted but the first argument must be left empty if you want to use the automatically generated number.\sidenote[][-2\baselineskip]{This sidenote has been shifted.}
+
+  The \verb!\sidecite! command to put bibliographic references into the margin works similarly to \verb!\marginnote!, \eg,~\sidecite{Example}.
+  References can also be vertically shifted, and like for biblatex commands, a postnote (and a prenote) can be added, \eg,~\sidecite[][Prenote]{Example} and~\sidecite[3\baselineskip][Postnote][Prenote]{Example}.
+
+  \section{Mathematical tools}
+
+  The usual mathematical boxes are defined.
+
+  \begin{theorem*}{thm}
+    Theorem statement.\index{theorem}
+  \end{theorem*}
+  \begin{lemma}{lemma}
+    Lemma statement.\index{lemma}
+  \end{lemma}
+  \begin{proposition}{prop}
+    Proposition statement.\index{proposition}
+  \end{proposition}
+  \begin{restatableMargin}{proposition}{prop}
+    Version of \Cref{prop} that goes inside the margin.
+  \end{restatableMargin}
+  \begin{corollary}{cor}
+    Corollary statement.\index{corollary}
+  \end{corollary}
+  \begin{definition*}{def}
+    \ifInMargin{Smaller definition.}{Definition statement.}\index{definition}
   \end{definition*}
+  \begin{remark}{rem}
+    Remark statement.\index{remark}
+  \end{remark}
+  \begin{example}{ex}
+    Example.\index{example}
+  \end{example}
+  \begin{proof}
+    A proof.
+  \end{proof}
 
-  This is some text with a marginnote next to it.\marginnote{Test of a margin note.}
+  An already defined box can be restated in the body:
 
-  Likewise with a sidenote.\sidenote{Test of a side note.}
+  \restate{def}
 
-  Test of citations~\sidecite{HopcroftU79,Angluin87}.
+  Here, \Cref{thm} used the starred variant of the environment.
+\marginnote{\restate{thm:margin}}% Note the :margin at the end
+  It is thus possible to restate a narrower version of the box inside the margin.
+\marginnote{\restate{def:margin}}%
+  Similarly, \Cref{def} also used the starred variant but also called the \verb!\ifInMargin! command to change the content of the box depending on whether it is written in the margin or the body.
+  While \Cref{prop} did not use the starred variant, an explicit margin version was made via the \verb!restatableMargin! environment.
+\marginnote{\restate{prop:margin}}%
 
+  Finally, let us illustrate the fact that we can restate equations inside the margin.
+  Let us consider the following \emph{numbered} equation:
   \begin{equation}
-    a = b\label{eq:a:b}
+    \forall i \in \{1, \dotsc, n\}, \exists j \in \{1, \dotsc, i\} : x_j = x_i + 2.\label{eq}
+    \restatableMarginEquation{\eqToRestate}{
+      \forall i \in \{1, \dotsc, n\},
+      \\
+      \exists j \in \{1, \dotsc, i\} :
+      \\
+      x_j = x_i + 2.
+    }{eq}
   \end{equation}
-  \restatableMarginEquation{\aEqualb}{a = b}{eq:a:b}
-  \marginnote{\aEqualb}
-
-  \subsection{Restate boxes}
-
-  \restate{def:box}
-  \marginnote{\restate{def:box:margin}}
-
-  \section{Restate equations}
-
-  \chapter{Various}
+  We call the \verb!restatableMarginEquation! as follows:\sidenote{This code must be within a math environment, typically inside the environment for the original equation.}
+  \begin{verbatim}
+    \restatableMarginEquation{eqToRestate}{
+      \begin{multlined}
+        \forall i &\in \{1, \dotsc, n\},
+        \\
+        \exists j &\in \{1, \dotsc, i\} :
+        \\
+        x_j &= x_i + 2.
+      \end{multlined}
+    }{eq}
+  \end{verbatim}
+  From now on, we can use the macro \verb!\eqToRestate! to restate the equation.
+  It can be in the margin
+  or in the body (which leads to a ugly result):
+\marginnote{\eqToRestate}%
+  \eqToRestate
 
   \section{Floats}
 
   Floats will always go to the top of a page.
   It is thus impossible to have a figure on the same page a chapter is started.
-  If a float is big enough, it will go on a page on its own.
-  Otherwise, text will come after it.
 
-  Do not put multiple captions in the same environment.
+  Do not put multiple captions in the same environment, or floats will be lost (which triggers an error)!
 
   \begin{figure}
     \includegraphics[width=.5\totalwidth,keepaspectratio]{example-image-a}
@@ -137,18 +184,26 @@
     \caption{A \textsf{booktabs} table.}
   \end{table}
 
-  \blindtext[10]
-  \marginnote[-5\baselineskip]{Test of a text that hopefully is long enough to require a linebreak}
-  \marginnote[\baselineskip]{\begin{tabular}{ll}\toprule VALUE & VALUE\\\bottomrule\end{tabular}}
-  \blindtext[10]
+  \begin{figure}[p]
+    \includegraphics[width=\totalwidth]{example-image-a}
+    \caption{A figure on a wide page.}
+  \end{figure}
+
+  \Cref{app} simply contains a long text to show how the layout behaves.
+  Note that it does not contain anything in the margin.
 
   \begin{appendices}
-    \Blinddocument
+    \chapter{Appendix}\label{app}
+    \Blindtext[5]
+    \Blinditemize
+    \Blindtext[5]
+    \Blindenumerate
+    \Blindtext[5]
+    \Blinddescription
+    \Blindtext[5]
   \end{appendices}
 
   \backmatter
-
-  \Blinddocument
 
   \printbibliography
 
